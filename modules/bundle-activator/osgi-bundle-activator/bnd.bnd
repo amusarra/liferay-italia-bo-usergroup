@@ -1,0 +1,11 @@
+Bundle-Activator: it.dontesta.labs.liferay.lrbo16.osgi.activator.HelloOsgiBundleActivator
+Bundle-Name: Hello OSGi Bundle Activator
+Bundle-SymbolicName: it.dontesta.labs.liferay.lrbo16.osgi.activator.HelloOsgiBundleActivator
+Bundle-Version: 1.0.0
+Bundle-Category: OSGi Bundle Activator
+Bundle-Copyright: Antonio Musarra's Blog
+Bundle-Vendor: Antonio Musarra's Blog
+Bundle-DocURL: http://www.dontesta.it/blog
+Require-Bundle: org.eclipse.osgi
+Bundle-ActivationPolicy: lazy
+Export-Package: it.dontesta.labs.liferay.lrbo16.osgi.activator
