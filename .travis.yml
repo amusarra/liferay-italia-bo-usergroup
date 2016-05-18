@@ -1,0 +1,3 @@
+# kickstart travis.
+sudo: required
+language: java
