@@ -1,0 +1,14 @@
+Bundle-Name: Horse OSGi Service
+Bundle-SymbolicName: it.dontesta.labs.liferay.lrbo16.service.horse.impl.HorseServiceImpl
+Bundle-Version: 1.0.0
+Bundle-Activator: it.dontesta.labs.liferay.lrbo16.service.horse.impl.module.HorseServiceActivator
+Private-Package: \
+   it.dontesta.labs.liferay.lrbo16.service.horse.impl,\
+   it.dontesta.labs.liferay.lrbo16.service.horse.impl.module
+Import-Package: \
+   it.dontesta.labs.liferay.lrbo16.service.horse,\
+   *
+Bundle-Category: Horse OSGi Service
+Bundle-Copyright: Antonio Musarra's Blog
+Bundle-Vendor: Antonio Musarra's Blog
+Bundle-DocURL: http://www.dontesta.it/blog
