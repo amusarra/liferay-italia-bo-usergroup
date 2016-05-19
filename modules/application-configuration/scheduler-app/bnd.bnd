@@ -1,0 +1,8 @@
+Bundle-Name: Scheduler App Configuration Sample
+Bundle-SymbolicName: it.dontesta.labs.liferay.lfbo16.appconfiguration.scheduler
+Bundle-Version: 1.0.0
+Bundle-Category: OSGi Application Configuration
+Bundle-Copyright: Antonio Musarra's Blog
+Bundle-Vendor: Antonio Musarra's Blog
+Bundle-DocURL: http://www.dontesta.it/blog
+-metatype: *
