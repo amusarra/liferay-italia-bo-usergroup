@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+
+<deployment xmlns="http://xml.apache.org/axis/wsdd/" xmlns:java="http://xml.apache.org/axis/wsdd/providers/java">
+	<service name="Plugin_LRBO_HORSE_HorseService" provider="java:RPC" style="rpc" use="encoded">
+		<parameter name="allowedMethods" value="*" />
+		<parameter name="className" value="it.dontesta.labs.liferay.lrbo16.servicebuilder.service.http.HorseServiceSoap" />
+		<parameter name="typeMappingVersion" value="1.2" />
+		<parameter name="wsdlPortType" value="HorseServiceSoap" />
+		<parameter name="wsdlServiceElement" value="HorseServiceSoapService" />
+		<parameter name="wsdlServicePort" value="Plugin_LRBO_HORSE_HorseService" />
+		<parameter name="wsdlTargetNamespace" value="urn:http.service.servicebuilder.lrbo16.liferay.labs.dontesta.it" />
+	</service>
+</deployment>

@@ -1,0 +1,7 @@
+Bundle-SymbolicName: horse-api
+Bundle-Version: 1.0.0
+Export-Package:\
+	it.dontesta.labs.liferay.lrbo16.servicebuilder.exception,\
+	it.dontesta.labs.liferay.lrbo16.servicebuilder.model,\
+	it.dontesta.labs.liferay.lrbo16.servicebuilder.service,\
+	it.dontesta.labs.liferay.lrbo16.servicebuilder.service.persistence

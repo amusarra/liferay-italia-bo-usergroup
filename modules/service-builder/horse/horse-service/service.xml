@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<!DOCTYPE service-builder PUBLIC "-//Liferay//DTD Service Builder 7.0.0//EN" "http://www.liferay.com/dtd/liferay-service-builder_7_0_0.dtd">
+
+<service-builder package-path="it.dontesta.labs.liferay.lrbo16.servicebuilder">
+	<namespace>LRBO_HORSE</namespace>
+	<entity local-service="true" name="Horse" remote-service="true" uuid="true">
+
+		<!-- PK fields -->
+
+		<column name="horseId" primary="true" type="long" />
+
+		<!-- Group instance -->
+
+		<column name="groupId" type="long" />
+
+		<!-- Audit fields -->
+
+		<column name="companyId" type="long" />
+		<column name="userId" type="long" />
+		<column name="userName" type="String" />
+		<column name="createDate" type="Date" />
+		<column name="modifiedDate" type="Date" />
+
+		<!-- Other fields -->
+
+		<column name="name" type="String" />
+		<column name="age" type="int" />
+		<column name="gender" type="String" />
+		<column name="kind" type="String" />
+		<column name="mantle" type="String" />
+
+		<!-- Order -->
+
+		<order by="asc">
+			<order-column name="name" />
+		</order>
+
+		<!-- Finder methods -->
+
+		<finder name="Name" return-type="Collection">
+			<finder-column name="name" />
+		</finder>
+	</entity>
+</service-builder>

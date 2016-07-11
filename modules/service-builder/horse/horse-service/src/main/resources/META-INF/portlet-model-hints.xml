@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+
+<model-hints>
+	<model name="it.dontesta.labs.liferay.lrbo16.servicebuilder.model.Horse">
+		<field name="uuid" type="String" />
+		<field name="horseId" type="long" />
+		<field name="groupId" type="long" />
+		<field name="companyId" type="long" />
+		<field name="userId" type="long" />
+		<field name="userName" type="String" />
+		<field name="createDate" type="Date" />
+		<field name="modifiedDate" type="Date" />
+		<field name="name" type="String" />
+		<field name="age" type="int" />
+		<field name="gender" type="String" />
+		<field name="kind" type="String" />
+		<field name="mantle" type="String" />
+	</model>
+</model-hints>

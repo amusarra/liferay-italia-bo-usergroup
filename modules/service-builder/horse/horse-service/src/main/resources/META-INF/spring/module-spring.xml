@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" default-destroy-method="destroy" default-init-method="afterPropertiesSet" xsi:schemaLocation=" http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	<bean class="it.dontesta.labs.liferay.lrbo16.servicebuilder.service.impl.HorseLocalServiceImpl" id="it.dontesta.labs.liferay.lrbo16.servicebuilder.service.HorseLocalService" />
+	<bean class="it.dontesta.labs.liferay.lrbo16.servicebuilder.service.impl.HorseServiceImpl" id="it.dontesta.labs.liferay.lrbo16.servicebuilder.service.HorseService" />
+	<bean class="it.dontesta.labs.liferay.lrbo16.servicebuilder.service.persistence.impl.HorsePersistenceImpl" id="it.dontesta.labs.liferay.lrbo16.servicebuilder.service.persistence.HorsePersistence" parent="basePersistence" />
+</beans>
