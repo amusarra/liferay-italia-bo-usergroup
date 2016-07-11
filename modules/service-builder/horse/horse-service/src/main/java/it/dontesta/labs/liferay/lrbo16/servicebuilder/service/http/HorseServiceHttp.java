@@ -16,12 +16,21 @@ package it.dontesta.labs.liferay.lrbo16.servicebuilder.service.http;
 
 import aQute.bnd.annotation.ProviderType;
 
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.security.auth.HttpPrincipal;
+import com.liferay.portal.kernel.service.http.TunnelUtil;
+import com.liferay.portal.kernel.util.MethodHandler;
+import com.liferay.portal.kernel.util.MethodKey;
+
+import it.dontesta.labs.liferay.lrbo16.servicebuilder.service.HorseServiceUtil;
+
 /**
  * Provides the HTTP utility for the
- * {@link it.dontesta.labs.liferay.lrbo16.servicebuilder.service.HorseServiceUtil} service utility. The
+ * {@link HorseServiceUtil} service utility. The
  * static methods of this class calls the same methods of the service utility.
  * However, the signatures are different because it requires an additional
- * {@link com.liferay.portal.kernel.security.auth.HttpPrincipal} parameter.
+ * {@link HttpPrincipal} parameter.
  *
  * <p>
  * The benefits of using the HTTP utility is that it is fast and allows for
@@ -40,10 +49,38 @@ import aQute.bnd.annotation.ProviderType;
  *
  * @author Brian Wing Shun Chan
  * @see HorseServiceSoap
- * @see com.liferay.portal.kernel.security.auth.HttpPrincipal
- * @see it.dontesta.labs.liferay.lrbo16.servicebuilder.service.HorseServiceUtil
+ * @see HttpPrincipal
+ * @see HorseServiceUtil
  * @generated
  */
 @ProviderType
 public class HorseServiceHttp {
+	public static java.util.List<it.dontesta.labs.liferay.lrbo16.servicebuilder.model.Horse> getHorses(
+		HttpPrincipal httpPrincipal) {
+		try {
+			MethodKey methodKey = new MethodKey(HorseServiceUtil.class,
+					"getHorses", _getHorsesParameterTypes0);
+
+			MethodHandler methodHandler = new MethodHandler(methodKey);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception e) {
+				throw new com.liferay.portal.kernel.exception.SystemException(e);
+			}
+
+			return (java.util.List<it.dontesta.labs.liferay.lrbo16.servicebuilder.model.Horse>)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException se) {
+			_log.error(se, se);
+
+			throw se;
+		}
+	}
+
+	private static Log _log = LogFactoryUtil.getLog(HorseServiceHttp.class);
+	private static final Class<?>[] _getHorsesParameterTypes0 = new Class[] {  };
 }

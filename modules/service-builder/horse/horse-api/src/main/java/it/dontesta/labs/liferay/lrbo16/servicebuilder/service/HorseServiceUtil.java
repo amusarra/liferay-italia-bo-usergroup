@@ -51,6 +51,10 @@ public class HorseServiceUtil {
 		return getService().getOSGiServiceIdentifier();
 	}
 
+	public static java.util.List<it.dontesta.labs.liferay.lrbo16.servicebuilder.model.Horse> getHorses() {
+		return getService().getHorses();
+	}
+
 	public static HorseService getService() {
 		return _serviceTracker.getService();
 	}

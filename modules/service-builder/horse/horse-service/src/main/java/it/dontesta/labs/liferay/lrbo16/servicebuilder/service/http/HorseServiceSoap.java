@@ -16,9 +16,16 @@ package it.dontesta.labs.liferay.lrbo16.servicebuilder.service.http;
 
 import aQute.bnd.annotation.ProviderType;
 
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
+
+import it.dontesta.labs.liferay.lrbo16.servicebuilder.service.HorseServiceUtil;
+
+import java.rmi.RemoteException;
+
 /**
  * Provides the SOAP utility for the
- * {@link it.dontesta.labs.liferay.lrbo16.servicebuilder.service.HorseServiceUtil} service utility. The
+ * {@link HorseServiceUtil} service utility. The
  * static methods of this class calls the same methods of the service utility.
  * However, the signatures are different because it is difficult for SOAP to
  * support certain types.
@@ -53,9 +60,25 @@ import aQute.bnd.annotation.ProviderType;
  * @author Brian Wing Shun Chan
  * @see HorseServiceHttp
  * @see it.dontesta.labs.liferay.lrbo16.servicebuilder.model.HorseSoap
- * @see it.dontesta.labs.liferay.lrbo16.servicebuilder.service.HorseServiceUtil
+ * @see HorseServiceUtil
  * @generated
  */
 @ProviderType
 public class HorseServiceSoap {
+	public static it.dontesta.labs.liferay.lrbo16.servicebuilder.model.HorseSoap[] getHorses()
+		throws RemoteException {
+		try {
+			java.util.List<it.dontesta.labs.liferay.lrbo16.servicebuilder.model.Horse> returnValue =
+				HorseServiceUtil.getHorses();
+
+			return it.dontesta.labs.liferay.lrbo16.servicebuilder.model.HorseSoap.toSoapModels(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	private static Log _log = LogFactoryUtil.getLog(HorseServiceSoap.class);
 }

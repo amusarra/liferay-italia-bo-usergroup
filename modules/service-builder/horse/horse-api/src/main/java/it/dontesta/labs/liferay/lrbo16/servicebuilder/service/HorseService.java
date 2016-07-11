@@ -23,7 +23,12 @@ import com.liferay.portal.kernel.security.access.control.AccessControlled;
 import com.liferay.portal.kernel.service.BaseService;
 import com.liferay.portal.kernel.spring.osgi.OSGiBeanProperties;
 import com.liferay.portal.kernel.transaction.Isolation;
+import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.Transactional;
+
+import it.dontesta.labs.liferay.lrbo16.servicebuilder.model.Horse;
+
+import java.util.List;
 
 /**
  * Provides the remote service interface for Horse. Methods of this
@@ -56,4 +61,7 @@ public interface HorseService extends BaseService {
 	* @return the OSGi service identifier
 	*/
 	public java.lang.String getOSGiServiceIdentifier();
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<Horse> getHorses();
 }

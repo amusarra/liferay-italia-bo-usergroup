@@ -2,8 +2,12 @@
 
 <deployment xmlns="http://xml.apache.org/axis/wsdd/" xmlns:java="http://xml.apache.org/axis/wsdd/providers/java">
 	<service name="Plugin_LRBO_HORSE_HorseService" provider="java:RPC" style="rpc" use="encoded">
-		<parameter name="allowedMethods" value="*" />
+		<arrayMapping xmlns:ns="urn:http.service.servicebuilder.lrbo16.liferay.labs.dontesta.it" xmlns:cmp-ns="http://model.servicebuilder.lrbo16.liferay.labs.dontesta.it" qname="ns:ArrayOf_tns2_HorseSoap" type="java:it.dontesta.labs.liferay.lrbo16.servicebuilder.model.HorseSoap[]" innerType="cmp-ns:HorseSoap" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"></arrayMapping>
+		<typeMapping xmlns:ns="http://model.servicebuilder.lrbo16.liferay.labs.dontesta.it" qname="ns:HorseSoap" type="java:it.dontesta.labs.liferay.lrbo16.servicebuilder.model.HorseSoap" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"></typeMapping>
+		<operation xmlns:operNS="urn:http.service.servicebuilder.lrbo16.liferay.labs.dontesta.it" xmlns:rtns="urn:http.service.servicebuilder.lrbo16.liferay.labs.dontesta.it" xmlns:tns2="http://model.servicebuilder.lrbo16.liferay.labs.dontesta.it" name="getHorses" qname="operNS:getHorses" returnQName="getHorsesReturn" returnType="rtns:ArrayOf_tns2_HorseSoap" returnItemType="tns2:HorseSoap" soapAction=""> </operation>
+		<parameter name="allowedMethods" value="getHorses" />
 		<parameter name="className" value="it.dontesta.labs.liferay.lrbo16.servicebuilder.service.http.HorseServiceSoap" />
+		<parameter name="schemaUnqualified" value="http://model.servicebuilder.lrbo16.liferay.labs.dontesta.it,urn:http.service.servicebuilder.lrbo16.liferay.labs.dontesta.it" />
 		<parameter name="typeMappingVersion" value="1.2" />
 		<parameter name="wsdlPortType" value="HorseServiceSoap" />
 		<parameter name="wsdlServiceElement" value="HorseServiceSoapService" />
