@@ -43,6 +43,10 @@ public class HorseServiceImpl extends HorseServiceBaseImpl {
 	 */
 	
 	public List<Horse> getHorses() {
-		return getHorsePersistence().findAll();
+		return getHorsePersistence().findAll(); 
+	}
+
+	public List<Horse> getHorsesByName(String name) {
+		return getHorsePersistence().findByName(name); 
 	}
 }

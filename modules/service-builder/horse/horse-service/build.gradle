@@ -1,7 +1,8 @@
 buildscript {
-        dependencies {
-                classpath group: "com.liferay", name: "com.liferay.gradle.plugins.wsdd.builder", version: "latest.release"
-        }
+    dependencies {
+        classpath group: "com.liferay", name: "com.liferay.gradle.plugins.service.builder", version: "latest.release"
+        classpath group: "com.liferay", name: "com.liferay.gradle.plugins.wsdd.builder", version: "latest.release"
+    }
 }
 
 dependencies {

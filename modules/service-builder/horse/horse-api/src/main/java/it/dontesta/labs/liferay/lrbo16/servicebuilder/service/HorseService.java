@@ -64,4 +64,7 @@ public interface HorseService extends BaseService {
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Horse> getHorses();
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<Horse> getHorsesByName(java.lang.String name);
 }

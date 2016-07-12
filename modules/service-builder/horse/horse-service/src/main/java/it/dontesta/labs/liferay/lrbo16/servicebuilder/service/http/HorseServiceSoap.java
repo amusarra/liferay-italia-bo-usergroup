@@ -80,5 +80,20 @@ public class HorseServiceSoap {
 		}
 	}
 
+	public static it.dontesta.labs.liferay.lrbo16.servicebuilder.model.HorseSoap[] getHorsesByName(
+		java.lang.String name) throws RemoteException {
+		try {
+			java.util.List<it.dontesta.labs.liferay.lrbo16.servicebuilder.model.Horse> returnValue =
+				HorseServiceUtil.getHorsesByName(name);
+
+			return it.dontesta.labs.liferay.lrbo16.servicebuilder.model.HorseSoap.toSoapModels(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
 	private static Log _log = LogFactoryUtil.getLog(HorseServiceSoap.class);
 }

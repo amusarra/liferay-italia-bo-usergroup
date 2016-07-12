@@ -55,6 +55,11 @@ public class HorseServiceUtil {
 		return getService().getHorses();
 	}
 
+	public static java.util.List<it.dontesta.labs.liferay.lrbo16.servicebuilder.model.Horse> getHorsesByName(
+		java.lang.String name) {
+		return getService().getHorsesByName(name);
+	}
+
 	public static HorseService getService() {
 		return _serviceTracker.getService();
 	}

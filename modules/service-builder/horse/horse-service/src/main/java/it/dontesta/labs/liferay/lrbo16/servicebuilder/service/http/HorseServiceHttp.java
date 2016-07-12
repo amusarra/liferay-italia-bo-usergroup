@@ -81,6 +81,35 @@ public class HorseServiceHttp {
 		}
 	}
 
+	public static java.util.List<it.dontesta.labs.liferay.lrbo16.servicebuilder.model.Horse> getHorsesByName(
+		HttpPrincipal httpPrincipal, java.lang.String name) {
+		try {
+			MethodKey methodKey = new MethodKey(HorseServiceUtil.class,
+					"getHorsesByName", _getHorsesByNameParameterTypes1);
+
+			MethodHandler methodHandler = new MethodHandler(methodKey, name);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception e) {
+				throw new com.liferay.portal.kernel.exception.SystemException(e);
+			}
+
+			return (java.util.List<it.dontesta.labs.liferay.lrbo16.servicebuilder.model.Horse>)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException se) {
+			_log.error(se, se);
+
+			throw se;
+		}
+	}
+
 	private static Log _log = LogFactoryUtil.getLog(HorseServiceHttp.class);
 	private static final Class<?>[] _getHorsesParameterTypes0 = new Class[] {  };
+	private static final Class<?>[] _getHorsesByNameParameterTypes1 = new Class[] {
+			java.lang.String.class
+		};
 }

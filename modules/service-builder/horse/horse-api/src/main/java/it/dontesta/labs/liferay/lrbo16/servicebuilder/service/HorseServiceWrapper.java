@@ -48,6 +48,12 @@ public class HorseServiceWrapper implements HorseService,
 	}
 
 	@Override
+	public java.util.List<it.dontesta.labs.liferay.lrbo16.servicebuilder.model.Horse> getHorsesByName(
+		java.lang.String name) {
+		return _horseService.getHorsesByName(name);
+	}
+
+	@Override
 	public HorseService getWrappedService() {
 		return _horseService;
 	}
