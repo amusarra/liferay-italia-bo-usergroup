@@ -1,3 +1,6 @@
+import com.liferay.gradle.plugins.service.builder.ServiceBuilderPlugin
+import com.liferay.gradle.plugins.wsdd.builder.WSDDBuilderPlugin
+
 buildscript {
 	dependencies {
 		classpath group: "com.liferay", name: "com.liferay.gradle.plugins.workspace", version: "1.0.34"
@@ -11,3 +14,11 @@ buildscript {
 }
 
 apply plugin: "com.liferay.workspace"
+
+gradle.beforeProject {
+	project ->
+
+	project.plugins.withType(ServiceBuilderPlugin) {
+		project.apply plugin: WSDDBuilderPlugin
+	}
+}
