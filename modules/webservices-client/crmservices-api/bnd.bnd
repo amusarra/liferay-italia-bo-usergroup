@@ -1,0 +1,6 @@
+Bundle-SymbolicName: crmservices-api
+Bundle-Version: 1.0.0
+Export-Package: \
+	it.dontesta.labs.liferay.lrbo16.webservice.crm.model,\
+	it.dontesta.labs.liferay.lrbo16.webservice.crm.api,\
+	it.dontesta.labs.liferay.lrbo16.webservice.crm.exception

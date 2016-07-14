@@ -1,0 +1,28 @@
+buildscript {
+  repositories {
+    maven {
+      url "https://plugins.gradle.org/m2/"
+    }
+  }
+  dependencies {
+    classpath "gradle.plugin.cz.swsamuraj:gradle-jaxws-plugin:0.5.0"
+  }
+}
+
+dependencies {
+	compile group: "biz.aQute.bnd", name: "biz.aQute.bndlib", version: "3.1.0"
+	compile group: "com.liferay", name: "com.liferay.osgi.util", version: "3.0.0"
+	compile group: "com.liferay", name: "com.liferay.portal.spring.extender", version: "2.0.0"
+	compile group: "com.liferay", name: "com.liferay.portal.configuration.metatype", version: "2.0.0"
+	compileOnly group: "org.apache.cxf", name: "cxf-core", version: "3.1.6"
+	compileOnly group: "org.apache.cxf", name: "cxf-rt-frontend-jaxws", version: "3.1.6"
+	compileOnly group: "org.apache.cxf", name: "cxf-rt-transports-http", version: "3.1.6"
+	compile project(":modules:webservices-client:crmservices-api") 
+}
+
+apply plugin: "cz.swsamuraj.jaxws"
+
+jaxws {
+    wsdlDir = 'src/main/resources/META-INF/wsdl'
+    generatedSources = 'src/generatedSources/ws'
+}
