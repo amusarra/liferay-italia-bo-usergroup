@@ -57,6 +57,19 @@ public class AddressType {
 	public void setCountry(String country) {
 		this.country = country;
 	}
+	
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("AddressType [street=").append(street).append(", city=").append(city).append(", zipCode=")
+				.append(zipCode).append(", country=").append(country).append("]");
+		return builder.toString();
+	}
+
 	private String city;
     private String zipCode;
     private String country;

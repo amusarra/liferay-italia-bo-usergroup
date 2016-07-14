@@ -1,10 +1,11 @@
 package it.dontesta.labs.liferay.lrbo16.webservice.crm.service;
 
-import java.util.ArrayList;
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 
 import javax.xml.namespace.QName;
+import javax.xml.ws.WebServiceException;
 
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.osgi.service.component.annotations.Activate;
@@ -14,6 +15,9 @@ import org.osgi.service.component.annotations.Modified;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.predic8.common._1.AddressType;
+import com.predic8.common._1.PersonType;
+import com.predic8.crm._1.CompanyAddressType;
 import com.predic8.crm._1.CustomerType;
 import com.predic8.wsdl.crm.crmservice._1.CRMServicePT;
 
@@ -41,10 +45,37 @@ public class CRMSOAPService implements CRMService {
 	@Override
 	public Customer createCustomer(Customer customer) throws CRMServiceException {
 		if (Validator.isNotNull(crmService)) {
-			CustomerType customerType = new CustomerType();
-			crmService.create(customerType);
-			
-			return customer;
+			try {
+				CustomerType customerType = new CustomerType();
+				customerType.setId(customer.getId());
+				
+				PersonType personType = new PersonType();
+				personType.setFirstName(customer.getPerson().getFirstName());
+				personType.setLastName(customer.getPerson().getLastName());
+				personType.setAge(BigInteger.valueOf(customer.getPerson().getAge()));
+				
+				AddressType addressType = new AddressType();
+				addressType.setCity(customer.getPerson().getAddress().getCity());
+				addressType.setCountry(customer.getPerson().getAddress().getCountry());
+				addressType.setStreet(customer.getPerson().getAddress().getStreet());
+				addressType.setZipCode(customer.getPerson().getAddress().getZipCode());
+				
+				personType.setAddress(addressType);
+				customerType.setPerson(personType);
+				
+				CompanyAddressType companyAddressType = new CompanyAddressType();
+				companyAddressType.setCompanyName(customer.getCompanyAddressType().getCompanyName());
+				customerType.setAddress(companyAddressType);
+				
+				crmService.create(customerType);
+				
+				return customer;
+			} catch (WebServiceException e) {
+				if (_log.isErrorEnabled()) {
+					_log.error(e);
+				}
+				throw new CRMServiceException(e);
+			}
 		} else {
 			throw new CRMServiceException("The CRMService is null!");
 		}
@@ -54,10 +85,42 @@ public class CRMSOAPService implements CRMService {
 	public Customer getCustomer(String customerId) throws CRMServiceException {
 		if (Validator.isNotNull(crmService)) {
 			CustomerType customerType;
-			customerType = crmService.get(customerId);
 			
-			Customer customer = new Customer();
-			return customer;
+			try {
+				customerType = crmService.get(customerId);
+
+				Customer customer = new Customer();
+				customer.setId(customerType.getId());
+				
+				it.dontesta.labs.liferay.lrbo16.webservice.crm.model.PersonType person = 
+						new it.dontesta.labs.liferay.lrbo16.webservice.crm.model.PersonType();
+				person.setFirstName(customerType.getPerson().getFirstName());
+				person.setLastName(customerType.getPerson().getLastName());
+				person.setAge(customerType.getPerson().getAge().intValue());
+				person.setId(customerType.getId());
+
+				it.dontesta.labs.liferay.lrbo16.webservice.crm.model.AddressType addressType = 
+						new it.dontesta.labs.liferay.lrbo16.webservice.crm.model.AddressType();
+				addressType.setCity(customerType.getPerson().getAddress().getCity());
+				addressType.setCountry(customerType.getPerson().getAddress().getCountry());
+				addressType.setStreet(customerType.getPerson().getAddress().getStreet());
+				addressType.setZipCode(customerType.getPerson().getAddress().getZipCode());
+				person.setAddress(addressType);
+				customer.setPerson(person);
+				
+				it.dontesta.labs.liferay.lrbo16.webservice.crm.model.CompanyAddressType companyAddressType = 
+						new it.dontesta.labs.liferay.lrbo16.webservice.crm.model.CompanyAddressType();
+				companyAddressType.setCompanyName(customerType.getAddress().getCompanyName());
+				customer.setCompanyAddressType(companyAddressType);
+				
+				return customer;
+			} catch (WebServiceException e) {
+				if (_log.isErrorEnabled()) {
+					_log.error(e);
+				}
+				throw new CRMServiceException(e);
+			}
+			
 		} else {
 			throw new CRMServiceException("The CRMService is null!");
 		}
@@ -65,15 +128,7 @@ public class CRMSOAPService implements CRMService {
 
 	@Override
 	public List<Customer> getCustomers() throws CRMServiceException {
-		if (Validator.isNotNull(crmService)) {
-			List<CustomerType> customerType;
-			customerType = crmService.getAll();
-			
-			List<Customer> customerList = new ArrayList<>();
-			return customerList;
-		} else {
-			throw new CRMServiceException("The CRMService is null!");
-		}
+		throw new CRMServiceException("The be implement!");
 	}
 	
 	/**

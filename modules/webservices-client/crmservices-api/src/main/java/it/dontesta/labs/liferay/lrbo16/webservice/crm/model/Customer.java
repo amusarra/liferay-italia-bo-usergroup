@@ -3,8 +3,6 @@
  */
 package it.dontesta.labs.liferay.lrbo16.webservice.crm.model;
 
-import java.util.UUID;
-
 /**
  * @author amusarra
  *
@@ -38,16 +36,28 @@ public class Customer {
 	/**
 	 * @return the id
 	 */
-	public UUID getId() {
+	public String getId() {
 		return id;
 	}
 	/**
 	 * @param id the id to set
 	 */
-	public void setId(UUID id) {
+	public void setId(String id) {
 		this.id = id;
 	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Customer [person=").append(person).append(", companyAddressType=").append(companyAddressType)
+				.append(", id=").append(id).append("]");
+		return builder.toString();
+	}
+
 	private PersonType person;
 	private CompanyAddressType companyAddressType;
-	private UUID id;
+	private String id;
 }
