@@ -2072,7 +2072,7 @@ public class HorsePersistenceImpl extends BasePersistenceImpl<Horse>
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
-		clearUniqueFindersCache((HorseModelImpl)horse);
+		clearUniqueFindersCache((HorseModelImpl)horse, true);
 	}
 
 	@Override
@@ -2084,48 +2084,35 @@ public class HorsePersistenceImpl extends BasePersistenceImpl<Horse>
 			entityCache.removeResult(HorseModelImpl.ENTITY_CACHE_ENABLED,
 				HorseImpl.class, horse.getPrimaryKey());
 
-			clearUniqueFindersCache((HorseModelImpl)horse);
+			clearUniqueFindersCache((HorseModelImpl)horse, true);
 		}
 	}
 
-	protected void cacheUniqueFindersCache(HorseModelImpl horseModelImpl,
-		boolean isNew) {
-		if (isNew) {
-			Object[] args = new Object[] {
-					horseModelImpl.getUuid(), horseModelImpl.getGroupId()
-				};
-
-			finderCache.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
-				Long.valueOf(1));
-			finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
-				horseModelImpl);
-		}
-		else {
-			if ((horseModelImpl.getColumnBitmask() &
-					FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						horseModelImpl.getUuid(), horseModelImpl.getGroupId()
-					};
-
-				finderCache.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
-					Long.valueOf(1));
-				finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
-					horseModelImpl);
-			}
-		}
-	}
-
-	protected void clearUniqueFindersCache(HorseModelImpl horseModelImpl) {
+	protected void cacheUniqueFindersCache(HorseModelImpl horseModelImpl) {
 		Object[] args = new Object[] {
 				horseModelImpl.getUuid(), horseModelImpl.getGroupId()
 			};
 
-		finderCache.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
-		finderCache.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
+		finderCache.putResult(FINDER_PATH_COUNT_BY_UUID_G, args,
+			Long.valueOf(1), false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G, args,
+			horseModelImpl, false);
+	}
+
+	protected void clearUniqueFindersCache(HorseModelImpl horseModelImpl,
+		boolean clearCurrent) {
+		if (clearCurrent) {
+			Object[] args = new Object[] {
+					horseModelImpl.getUuid(), horseModelImpl.getGroupId()
+				};
+
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_UUID_G, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_UUID_G, args);
+		}
 
 		if ((horseModelImpl.getColumnBitmask() &
 				FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
-			args = new Object[] {
+			Object[] args = new Object[] {
 					horseModelImpl.getOriginalUuid(),
 					horseModelImpl.getOriginalGroupId()
 				};
@@ -2357,8 +2344,8 @@ public class HorsePersistenceImpl extends BasePersistenceImpl<Horse>
 		entityCache.putResult(HorseModelImpl.ENTITY_CACHE_ENABLED,
 			HorseImpl.class, horse.getPrimaryKey(), horse, false);
 
-		clearUniqueFindersCache(horseModelImpl);
-		cacheUniqueFindersCache(horseModelImpl, isNew);
+		clearUniqueFindersCache(horseModelImpl, false);
+		cacheUniqueFindersCache(horseModelImpl);
 
 		horse.resetOriginalValues();
 

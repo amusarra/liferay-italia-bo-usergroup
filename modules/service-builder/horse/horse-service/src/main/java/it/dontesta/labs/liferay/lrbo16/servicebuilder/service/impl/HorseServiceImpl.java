@@ -16,6 +16,8 @@ package it.dontesta.labs.liferay.lrbo16.servicebuilder.service.impl;
 
 import java.util.List;
 
+import com.liferay.portal.kernel.security.access.control.AccessControlled;
+
 import aQute.bnd.annotation.ProviderType;
 import it.dontesta.labs.liferay.lrbo16.servicebuilder.model.Horse;
 import it.dontesta.labs.liferay.lrbo16.servicebuilder.service.base.HorseServiceBaseImpl;
@@ -41,12 +43,14 @@ public class HorseServiceImpl extends HorseServiceBaseImpl {
 	 *
 	 * Never reference this class directly. Always use {@link it.dontesta.labs.liferay.lrbo16.servicebuilder.service.HorseServiceUtil} to access the horse remote service.
 	 */
-	
+	@AccessControlled(guestAccessEnabled = true, hostAllowedValidationEnabled = false)
+	@Override
 	public List<Horse> getHorses() {
-		return getHorsePersistence().findAll(); 
+		return getHorsePersistence().findAll();
 	}
 
+	@Override
 	public List<Horse> getHorsesByName(String name) {
-		return getHorsePersistence().findByName(name); 
+		return getHorsePersistence().findByName(name);
 	}
 }

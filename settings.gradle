@@ -3,12 +3,12 @@ import com.liferay.gradle.plugins.wsdd.builder.WSDDBuilderPlugin
 
 buildscript {
 	dependencies {
-		classpath group: "com.liferay", name: "com.liferay.gradle.plugins.workspace", version: "1.0.34"
+		classpath group: "com.liferay", name: "com.liferay.gradle.plugins.workspace", version: "1.2.4"
 	}
 
 	repositories {
 		maven {
-			url "http://cdn.repository.liferay.com/nexus/content/groups/public"
+			url "https://cdn.lfrs.sl/repository.liferay.com/nexus/content/groups/public"
 		}
 	}
 }

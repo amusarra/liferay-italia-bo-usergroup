@@ -62,6 +62,7 @@ public interface HorseService extends BaseService {
 	*/
 	public java.lang.String getOSGiServiceIdentifier();
 
+	@AccessControlled(guestAccessEnabled = true, hostAllowedValidationEnabled = false)
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Horse> getHorses();
 

@@ -1,8 +1,8 @@
 *.class
-
+**/*.iml
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
-
+**/.ivy
 # Package Files #
 *.jar
 *.war
@@ -47,7 +47,7 @@ tmp/
 local.properties
 .settings/
 .loadpath
-target/
+**/.classpath
 
 # Eclipse Core
 .project
@@ -88,18 +88,23 @@ target/
 # Code Recommenders
 .recommenders/
 
+**/.sass-cache
+**/bin
+**/build
+**/build_gradle
+**/node_modules
+**/test-coverage
+**/tmp
+**/.web_bundle_build
+
 .gradle
-build/
-bundles/
-
-# Ignore Gradle GUI config
-gradle-app.setting
-
-# Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
-!gradle-wrapper.jar
-
-# Cache of project
-.gradletasknamecache
-
-# # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
-# gradle/wrapper/gradle-wrapper.properties
+.idea
+/bundles
+/plugins-sdk/**/classes
+/plugins-sdk/**/ivy.xml.MD5
+/plugins-sdk/**/liferay-hook.xml.processed
+/plugins-sdk/build.*.properties
+/plugins-sdk/dependencies/**/*.jar
+/plugins-sdk/dist
+/plugins-sdk/lib
+test-results
