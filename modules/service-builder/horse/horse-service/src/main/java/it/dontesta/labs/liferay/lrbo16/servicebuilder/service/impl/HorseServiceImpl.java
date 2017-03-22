@@ -14,13 +14,12 @@
 
 package it.dontesta.labs.liferay.lrbo16.servicebuilder.service.impl;
 
-import java.util.List;
-
-import com.liferay.portal.kernel.security.access.control.AccessControlled;
-
 import aQute.bnd.annotation.ProviderType;
+import com.liferay.portal.kernel.security.access.control.AccessControlled;
 import it.dontesta.labs.liferay.lrbo16.servicebuilder.model.Horse;
 import it.dontesta.labs.liferay.lrbo16.servicebuilder.service.base.HorseServiceBaseImpl;
+
+import java.util.List;
 
 /**
  * The implementation of the horse remote service.
@@ -53,4 +52,25 @@ public class HorseServiceImpl extends HorseServiceBaseImpl {
 	public List<Horse> getHorsesByName(String name) {
 		return getHorsePersistence().findByName(name);
 	}
+
+	/**
+	 * Add a new Horse
+	 *
+	 * @param name
+	 * @param kind
+	 * @param mantle
+	 * @param gender
+	 * @param age
+	 * @return
+	 */
+	@Override
+	public Horse addHorse(String name, String kind, String mantle, String gender, int age) {
+		return horseLocalService.addHorse(name, kind, mantle, gender, age);
+	}
+
+	@Override
+	public List<Horse> getCurrentHorseByeAge(int age) {
+		return horsePersistence.findByAgeAndCurrentCreateDate(age);
+	}
+
 }

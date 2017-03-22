@@ -15,14 +15,7 @@
 package it.dontesta.labs.liferay.lrbo16.servicebuilder.service.persistence.impl;
 
 import aQute.bnd.annotation.ProviderType;
-
-import com.liferay.portal.kernel.dao.orm.EntityCache;
-import com.liferay.portal.kernel.dao.orm.FinderCache;
-import com.liferay.portal.kernel.dao.orm.FinderPath;
-import com.liferay.portal.kernel.dao.orm.Query;
-import com.liferay.portal.kernel.dao.orm.QueryPos;
-import com.liferay.portal.kernel.dao.orm.QueryUtil;
-import com.liferay.portal.kernel.dao.orm.Session;
+import com.liferay.portal.kernel.dao.orm.*;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
@@ -30,14 +23,9 @@ import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.service.persistence.CompanyProvider;
 import com.liferay.portal.kernel.service.persistence.CompanyProviderWrapper;
 import com.liferay.portal.kernel.service.persistence.impl.BasePersistenceImpl;
-import com.liferay.portal.kernel.util.OrderByComparator;
-import com.liferay.portal.kernel.util.SetUtil;
-import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
-import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.util.*;
 import com.liferay.portal.kernel.uuid.PortalUUIDUtil;
 import com.liferay.portal.spring.extender.service.ServiceReference;
-
 import it.dontesta.labs.liferay.lrbo16.servicebuilder.exception.NoSuchHorseException;
 import it.dontesta.labs.liferay.lrbo16.servicebuilder.model.Horse;
 import it.dontesta.labs.liferay.lrbo16.servicebuilder.model.impl.HorseImpl;
@@ -45,16 +33,7 @@ import it.dontesta.labs.liferay.lrbo16.servicebuilder.model.impl.HorseModelImpl;
 import it.dontesta.labs.liferay.lrbo16.servicebuilder.service.persistence.HorsePersistence;
 
 import java.io.Serializable;
-
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 /**
  * The persistence implementation for the horse service.
@@ -2002,6 +1981,779 @@ public class HorsePersistenceImpl extends BasePersistenceImpl<Horse>
 	private static final String _FINDER_COLUMN_NAME_NAME_1 = "horse.name IS NULL";
 	private static final String _FINDER_COLUMN_NAME_NAME_2 = "horse.name = ?";
 	private static final String _FINDER_COLUMN_NAME_NAME_3 = "(horse.name IS NULL OR horse.name = '')";
+	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_AGEANDCURRENTCREATEDATE =
+		new FinderPath(HorseModelImpl.ENTITY_CACHE_ENABLED,
+			HorseModelImpl.FINDER_CACHE_ENABLED, HorseImpl.class,
+			FINDER_CLASS_NAME_LIST_WITH_PAGINATION,
+			"findByAgeAndCurrentCreateDate",
+			new String[] {
+				Integer.class.getName(),
+				
+			Integer.class.getName(), Integer.class.getName(),
+				OrderByComparator.class.getName()
+			});
+	public static final FinderPath FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_AGEANDCURRENTCREATEDATE =
+		new FinderPath(HorseModelImpl.ENTITY_CACHE_ENABLED,
+			HorseModelImpl.FINDER_CACHE_ENABLED, HorseImpl.class,
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION,
+			"findByAgeAndCurrentCreateDate",
+			new String[] { Integer.class.getName() },
+			HorseModelImpl.AGE_COLUMN_BITMASK |
+			HorseModelImpl.NAME_COLUMN_BITMASK);
+	public static final FinderPath FINDER_PATH_COUNT_BY_AGEANDCURRENTCREATEDATE = new FinderPath(HorseModelImpl.ENTITY_CACHE_ENABLED,
+			HorseModelImpl.FINDER_CACHE_ENABLED, Long.class,
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION,
+			"countByAgeAndCurrentCreateDate",
+			new String[] { Integer.class.getName() });
+	public static final FinderPath FINDER_PATH_WITH_PAGINATION_COUNT_BY_AGEANDCURRENTCREATEDATE =
+		new FinderPath(HorseModelImpl.ENTITY_CACHE_ENABLED,
+			HorseModelImpl.FINDER_CACHE_ENABLED, Long.class,
+			FINDER_CLASS_NAME_LIST_WITH_PAGINATION,
+			"countByAgeAndCurrentCreateDate",
+			new String[] { Integer.class.getName() });
+
+	/**
+	 * Returns all the horses where age = &#63;.
+	 *
+	 * @param age the age
+	 * @return the matching horses
+	 */
+	@Override
+	public List<Horse> findByAgeAndCurrentCreateDate(int age) {
+		return findByAgeAndCurrentCreateDate(age, QueryUtil.ALL_POS,
+			QueryUtil.ALL_POS, null);
+	}
+
+	/**
+	 * Returns a range of all the horses where age = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link HorseModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param age the age
+	 * @param start the lower bound of the range of horses
+	 * @param end the upper bound of the range of horses (not inclusive)
+	 * @return the range of matching horses
+	 */
+	@Override
+	public List<Horse> findByAgeAndCurrentCreateDate(int age, int start, int end) {
+		return findByAgeAndCurrentCreateDate(age, start, end, null);
+	}
+
+	/**
+	 * Returns an ordered range of all the horses where age = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link HorseModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param age the age
+	 * @param start the lower bound of the range of horses
+	 * @param end the upper bound of the range of horses (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching horses
+	 */
+	@Override
+	public List<Horse> findByAgeAndCurrentCreateDate(int age, int start,
+		int end, OrderByComparator<Horse> orderByComparator) {
+		return findByAgeAndCurrentCreateDate(age, start, end,
+			orderByComparator, true);
+	}
+
+	/**
+	 * Returns an ordered range of all the horses where age = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link HorseModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param age the age
+	 * @param start the lower bound of the range of horses
+	 * @param end the upper bound of the range of horses (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @param retrieveFromCache whether to retrieve from the finder cache
+	 * @return the ordered range of matching horses
+	 */
+	@Override
+	public List<Horse> findByAgeAndCurrentCreateDate(int age, int start,
+		int end, OrderByComparator<Horse> orderByComparator,
+		boolean retrieveFromCache) {
+		boolean pagination = true;
+		FinderPath finderPath = null;
+		Object[] finderArgs = null;
+
+		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
+				(orderByComparator == null)) {
+			pagination = false;
+			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_AGEANDCURRENTCREATEDATE;
+			finderArgs = new Object[] { age };
+		}
+		else {
+			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_AGEANDCURRENTCREATEDATE;
+			finderArgs = new Object[] { age, start, end, orderByComparator };
+		}
+
+		List<Horse> list = null;
+
+		if (retrieveFromCache) {
+			list = (List<Horse>)finderCache.getResult(finderPath, finderArgs,
+					this);
+
+			if ((list != null) && !list.isEmpty()) {
+				for (Horse horse : list) {
+					if ((age != horse.getAge())) {
+						list = null;
+
+						break;
+					}
+				}
+			}
+		}
+
+		if (list == null) {
+			StringBundler query = null;
+
+			if (orderByComparator != null) {
+				query = new StringBundler(3 +
+						(orderByComparator.getOrderByFields().length * 2));
+			}
+			else {
+				query = new StringBundler(3);
+			}
+
+			query.append(_SQL_SELECT_HORSE_WHERE);
+
+			query.append(_FINDER_COLUMN_AGEANDCURRENTCREATEDATE_AGE_2);
+
+			if (orderByComparator != null) {
+				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
+					orderByComparator);
+			}
+			else
+			 if (pagination) {
+				query.append(HorseModelImpl.ORDER_BY_JPQL);
+			}
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				qPos.add(age);
+
+				if (!pagination) {
+					list = (List<Horse>)QueryUtil.list(q, getDialect(), start,
+							end, false);
+
+					Collections.sort(list);
+
+					list = Collections.unmodifiableList(list);
+				}
+				else {
+					list = (List<Horse>)QueryUtil.list(q, getDialect(), start,
+							end);
+				}
+
+				cacheResult(list);
+
+				finderCache.putResult(finderPath, finderArgs, list);
+			}
+			catch (Exception e) {
+				finderCache.removeResult(finderPath, finderArgs);
+
+				throw processException(e);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return list;
+	}
+
+	/**
+	 * Returns the first horse in the ordered set where age = &#63;.
+	 *
+	 * @param age the age
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching horse
+	 * @throws NoSuchHorseException if a matching horse could not be found
+	 */
+	@Override
+	public Horse findByAgeAndCurrentCreateDate_First(int age,
+		OrderByComparator<Horse> orderByComparator) throws NoSuchHorseException {
+		Horse horse = fetchByAgeAndCurrentCreateDate_First(age,
+				orderByComparator);
+
+		if (horse != null) {
+			return horse;
+		}
+
+		StringBundler msg = new StringBundler(4);
+
+		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+		msg.append("age=");
+		msg.append(age);
+
+		msg.append(StringPool.CLOSE_CURLY_BRACE);
+
+		throw new NoSuchHorseException(msg.toString());
+	}
+
+	/**
+	 * Returns the first horse in the ordered set where age = &#63;.
+	 *
+	 * @param age the age
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching horse, or <code>null</code> if a matching horse could not be found
+	 */
+	@Override
+	public Horse fetchByAgeAndCurrentCreateDate_First(int age,
+		OrderByComparator<Horse> orderByComparator) {
+		List<Horse> list = findByAgeAndCurrentCreateDate(age, 0, 1,
+				orderByComparator);
+
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the last horse in the ordered set where age = &#63;.
+	 *
+	 * @param age the age
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching horse
+	 * @throws NoSuchHorseException if a matching horse could not be found
+	 */
+	@Override
+	public Horse findByAgeAndCurrentCreateDate_Last(int age,
+		OrderByComparator<Horse> orderByComparator) throws NoSuchHorseException {
+		Horse horse = fetchByAgeAndCurrentCreateDate_Last(age, orderByComparator);
+
+		if (horse != null) {
+			return horse;
+		}
+
+		StringBundler msg = new StringBundler(4);
+
+		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+		msg.append("age=");
+		msg.append(age);
+
+		msg.append(StringPool.CLOSE_CURLY_BRACE);
+
+		throw new NoSuchHorseException(msg.toString());
+	}
+
+	/**
+	 * Returns the last horse in the ordered set where age = &#63;.
+	 *
+	 * @param age the age
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching horse, or <code>null</code> if a matching horse could not be found
+	 */
+	@Override
+	public Horse fetchByAgeAndCurrentCreateDate_Last(int age,
+		OrderByComparator<Horse> orderByComparator) {
+		int count = countByAgeAndCurrentCreateDate(age);
+
+		if (count == 0) {
+			return null;
+		}
+
+		List<Horse> list = findByAgeAndCurrentCreateDate(age, count - 1, count,
+				orderByComparator);
+
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the horses before and after the current horse in the ordered set where age = &#63;.
+	 *
+	 * @param horseId the primary key of the current horse
+	 * @param age the age
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next horse
+	 * @throws NoSuchHorseException if a horse with the primary key could not be found
+	 */
+	@Override
+	public Horse[] findByAgeAndCurrentCreateDate_PrevAndNext(long horseId,
+		int age, OrderByComparator<Horse> orderByComparator)
+		throws NoSuchHorseException {
+		Horse horse = findByPrimaryKey(horseId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			Horse[] array = new HorseImpl[3];
+
+			array[0] = getByAgeAndCurrentCreateDate_PrevAndNext(session, horse,
+					age, orderByComparator, true);
+
+			array[1] = horse;
+
+			array[2] = getByAgeAndCurrentCreateDate_PrevAndNext(session, horse,
+					age, orderByComparator, false);
+
+			return array;
+		}
+		catch (Exception e) {
+			throw processException(e);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	protected Horse getByAgeAndCurrentCreateDate_PrevAndNext(Session session,
+		Horse horse, int age, OrderByComparator<Horse> orderByComparator,
+		boolean previous) {
+		StringBundler query = null;
+
+		if (orderByComparator != null) {
+			query = new StringBundler(4 +
+					(orderByComparator.getOrderByConditionFields().length * 3) +
+					(orderByComparator.getOrderByFields().length * 3));
+		}
+		else {
+			query = new StringBundler(3);
+		}
+
+		query.append(_SQL_SELECT_HORSE_WHERE);
+
+		query.append(_FINDER_COLUMN_AGEANDCURRENTCREATEDATE_AGE_2);
+
+		if (orderByComparator != null) {
+			String[] orderByConditionFields = orderByComparator.getOrderByConditionFields();
+
+			if (orderByConditionFields.length > 0) {
+				query.append(WHERE_AND);
+			}
+
+			for (int i = 0; i < orderByConditionFields.length; i++) {
+				query.append(_ORDER_BY_ENTITY_ALIAS);
+				query.append(orderByConditionFields[i]);
+
+				if ((i + 1) < orderByConditionFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN_HAS_NEXT);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN);
+					}
+				}
+			}
+
+			query.append(ORDER_BY_CLAUSE);
+
+			String[] orderByFields = orderByComparator.getOrderByFields();
+
+			for (int i = 0; i < orderByFields.length; i++) {
+				query.append(_ORDER_BY_ENTITY_ALIAS);
+				query.append(orderByFields[i]);
+
+				if ((i + 1) < orderByFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC_HAS_NEXT);
+					}
+					else {
+						query.append(ORDER_BY_DESC_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC);
+					}
+					else {
+						query.append(ORDER_BY_DESC);
+					}
+				}
+			}
+		}
+		else {
+			query.append(HorseModelImpl.ORDER_BY_JPQL);
+		}
+
+		String sql = query.toString();
+
+		Query q = session.createQuery(sql);
+
+		q.setFirstResult(0);
+		q.setMaxResults(2);
+
+		QueryPos qPos = QueryPos.getInstance(q);
+
+		qPos.add(age);
+
+		if (orderByComparator != null) {
+			Object[] values = orderByComparator.getOrderByConditionValues(horse);
+
+			for (Object value : values) {
+				qPos.add(value);
+			}
+		}
+
+		List<Horse> list = q.list();
+
+		if (list.size() == 2) {
+			return list.get(1);
+		}
+		else {
+			return null;
+		}
+	}
+
+	/**
+	 * Returns all the horses where age = any &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link HorseModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param ages the ages
+	 * @return the matching horses
+	 */
+	@Override
+	public List<Horse> findByAgeAndCurrentCreateDate(int[] ages) {
+		return findByAgeAndCurrentCreateDate(ages, QueryUtil.ALL_POS,
+			QueryUtil.ALL_POS, null);
+	}
+
+	/**
+	 * Returns a range of all the horses where age = any &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link HorseModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param ages the ages
+	 * @param start the lower bound of the range of horses
+	 * @param end the upper bound of the range of horses (not inclusive)
+	 * @return the range of matching horses
+	 */
+	@Override
+	public List<Horse> findByAgeAndCurrentCreateDate(int[] ages, int start,
+		int end) {
+		return findByAgeAndCurrentCreateDate(ages, start, end, null);
+	}
+
+	/**
+	 * Returns an ordered range of all the horses where age = any &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link HorseModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param ages the ages
+	 * @param start the lower bound of the range of horses
+	 * @param end the upper bound of the range of horses (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching horses
+	 */
+	@Override
+	public List<Horse> findByAgeAndCurrentCreateDate(int[] ages, int start,
+		int end, OrderByComparator<Horse> orderByComparator) {
+		return findByAgeAndCurrentCreateDate(ages, start, end,
+			orderByComparator, true);
+	}
+
+	/**
+	 * Returns an ordered range of all the horses where age = &#63;, optionally using the finder cache.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link HorseModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param age the age
+	 * @param start the lower bound of the range of horses
+	 * @param end the upper bound of the range of horses (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @param retrieveFromCache whether to retrieve from the finder cache
+	 * @return the ordered range of matching horses
+	 */
+	@Override
+	public List<Horse> findByAgeAndCurrentCreateDate(int[] ages, int start,
+		int end, OrderByComparator<Horse> orderByComparator,
+		boolean retrieveFromCache) {
+		if (ages == null) {
+			ages = new int[0];
+		}
+		else if (ages.length > 1) {
+			ages = ArrayUtil.unique(ages);
+
+			Arrays.sort(ages);
+		}
+
+		if (ages.length == 1) {
+			return findByAgeAndCurrentCreateDate(ages[0], start, end,
+				orderByComparator);
+		}
+
+		boolean pagination = true;
+		Object[] finderArgs = null;
+
+		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
+				(orderByComparator == null)) {
+			pagination = false;
+			finderArgs = new Object[] { StringUtil.merge(ages) };
+		}
+		else {
+			finderArgs = new Object[] {
+					StringUtil.merge(ages),
+					
+					start, end, orderByComparator
+				};
+		}
+
+		List<Horse> list = null;
+
+		if (retrieveFromCache) {
+			list = (List<Horse>)finderCache.getResult(FINDER_PATH_WITH_PAGINATION_FIND_BY_AGEANDCURRENTCREATEDATE,
+					finderArgs, this);
+
+			if ((list != null) && !list.isEmpty()) {
+				for (Horse horse : list) {
+					if (!ArrayUtil.contains(ages, horse.getAge())) {
+						list = null;
+
+						break;
+					}
+				}
+			}
+		}
+
+		if (list == null) {
+			StringBundler query = new StringBundler();
+
+			query.append(_SQL_SELECT_HORSE_WHERE);
+
+			if (ages.length > 0) {
+				query.append(StringPool.OPEN_PARENTHESIS);
+
+				query.append(_FINDER_COLUMN_AGEANDCURRENTCREATEDATE_AGE_7);
+
+				query.append(StringUtil.merge(ages));
+
+				query.append(StringPool.CLOSE_PARENTHESIS);
+
+				query.append(StringPool.CLOSE_PARENTHESIS);
+			}
+
+			query.append(
+				"EXTRACT(DAY FROM horse.createDate) - EXTRACT(DAY FROM CURRENT_TIMESTAMP) = 0 AND EXTRACT(MONTH FROM horse.createDate) - EXTRACT(MONTH FROM CURRENT_TIMESTAMP) = 0 AND EXTRACT(YEAR FROM horse.createDate) - EXTRACT(YEAR FROM CURRENT_TIMESTAMP) = 0");
+
+			if (orderByComparator != null) {
+				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
+					orderByComparator);
+			}
+			else
+			 if (pagination) {
+				query.append(HorseModelImpl.ORDER_BY_JPQL);
+			}
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				if (!pagination) {
+					list = (List<Horse>)QueryUtil.list(q, getDialect(), start,
+							end, false);
+
+					Collections.sort(list);
+
+					list = Collections.unmodifiableList(list);
+				}
+				else {
+					list = (List<Horse>)QueryUtil.list(q, getDialect(), start,
+							end);
+				}
+
+				cacheResult(list);
+
+				finderCache.putResult(FINDER_PATH_WITH_PAGINATION_FIND_BY_AGEANDCURRENTCREATEDATE,
+					finderArgs, list);
+			}
+			catch (Exception e) {
+				finderCache.removeResult(FINDER_PATH_WITH_PAGINATION_FIND_BY_AGEANDCURRENTCREATEDATE,
+					finderArgs);
+
+				throw processException(e);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return list;
+	}
+
+	/**
+	 * Removes all the horses where age = &#63; from the database.
+	 *
+	 * @param age the age
+	 */
+	@Override
+	public void removeByAgeAndCurrentCreateDate(int age) {
+		for (Horse horse : findByAgeAndCurrentCreateDate(age,
+				QueryUtil.ALL_POS, QueryUtil.ALL_POS, null)) {
+			remove(horse);
+		}
+	}
+
+	/**
+	 * Returns the number of horses where age = &#63;.
+	 *
+	 * @param age the age
+	 * @return the number of matching horses
+	 */
+	@Override
+	public int countByAgeAndCurrentCreateDate(int age) {
+		FinderPath finderPath = FINDER_PATH_COUNT_BY_AGEANDCURRENTCREATEDATE;
+
+		Object[] finderArgs = new Object[] { age };
+
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
+
+		if (count == null) {
+			StringBundler query = new StringBundler(2);
+
+			query.append(_SQL_COUNT_HORSE_WHERE);
+
+			query.append(_FINDER_COLUMN_AGEANDCURRENTCREATEDATE_AGE_2);
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				qPos.add(age);
+
+				count = (Long)q.uniqueResult();
+
+				finderCache.putResult(finderPath, finderArgs, count);
+			}
+			catch (Exception e) {
+				finderCache.removeResult(finderPath, finderArgs);
+
+				throw processException(e);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return count.intValue();
+	}
+
+	/**
+	 * Returns the number of horses where age = any &#63;.
+	 *
+	 * @param ages the ages
+	 * @return the number of matching horses
+	 */
+	@Override
+	public int countByAgeAndCurrentCreateDate(int[] ages) {
+		if (ages == null) {
+			ages = new int[0];
+		}
+		else if (ages.length > 1) {
+			ages = ArrayUtil.unique(ages);
+
+			Arrays.sort(ages);
+		}
+
+		Object[] finderArgs = new Object[] { StringUtil.merge(ages) };
+
+		Long count = (Long)finderCache.getResult(FINDER_PATH_WITH_PAGINATION_COUNT_BY_AGEANDCURRENTCREATEDATE,
+				finderArgs, this);
+
+		if (count == null) {
+			StringBundler query = new StringBundler();
+
+			query.append(_SQL_COUNT_HORSE_WHERE);
+
+			if (ages.length > 0) {
+				query.append(StringPool.OPEN_PARENTHESIS);
+
+				query.append(_FINDER_COLUMN_AGEANDCURRENTCREATEDATE_AGE_7);
+
+				query.append(StringUtil.merge(ages));
+
+				query.append(StringPool.CLOSE_PARENTHESIS);
+
+				query.append(StringPool.CLOSE_PARENTHESIS);
+			}
+
+			query.append(
+				"EXTRACT(DAY FROM horse.createDate) - EXTRACT(DAY FROM CURRENT_TIMESTAMP) = 0 AND EXTRACT(MONTH FROM horse.createDate) - EXTRACT(MONTH FROM CURRENT_TIMESTAMP) = 0 AND EXTRACT(YEAR FROM horse.createDate) - EXTRACT(YEAR FROM CURRENT_TIMESTAMP) = 0");
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				count = (Long)q.uniqueResult();
+
+				finderCache.putResult(FINDER_PATH_WITH_PAGINATION_COUNT_BY_AGEANDCURRENTCREATEDATE,
+					finderArgs, count);
+			}
+			catch (Exception e) {
+				finderCache.removeResult(FINDER_PATH_WITH_PAGINATION_COUNT_BY_AGEANDCURRENTCREATEDATE,
+					finderArgs);
+
+				throw processException(e);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return count.intValue();
+	}
+
+	private static final String _FINDER_COLUMN_AGEANDCURRENTCREATEDATE_AGE_2 = "horse.age = ? AND EXTRACT(DAY FROM horse.createDate) - EXTRACT(DAY FROM CURRENT_TIMESTAMP) = 0 AND EXTRACT(MONTH FROM horse.createDate) - EXTRACT(MONTH FROM CURRENT_TIMESTAMP) = 0 AND EXTRACT(YEAR FROM horse.createDate) - EXTRACT(YEAR FROM CURRENT_TIMESTAMP) = 0";
+	private static final String _FINDER_COLUMN_AGEANDCURRENTCREATEDATE_AGE_7 = "horse.age IN (";
 
 	public HorsePersistenceImpl() {
 		setModelClass(Horse.class);
@@ -2337,6 +3089,23 @@ public class HorsePersistenceImpl extends BasePersistenceImpl<Horse>
 
 				finderCache.removeResult(FINDER_PATH_COUNT_BY_NAME, args);
 				finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_NAME,
+					args);
+			}
+
+			if ((horseModelImpl.getColumnBitmask() &
+					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_AGEANDCURRENTCREATEDATE.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] { horseModelImpl.getOriginalAge() };
+
+				finderCache.removeResult(FINDER_PATH_COUNT_BY_AGEANDCURRENTCREATEDATE,
+					args);
+				finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_AGEANDCURRENTCREATEDATE,
+					args);
+
+				args = new Object[] { horseModelImpl.getAge() };
+
+				finderCache.removeResult(FINDER_PATH_COUNT_BY_AGEANDCURRENTCREATEDATE,
+					args);
+				finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_AGEANDCURRENTCREATEDATE,
 					args);
 			}
 		}

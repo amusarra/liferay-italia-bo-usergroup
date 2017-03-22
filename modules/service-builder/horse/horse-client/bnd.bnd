@@ -1,0 +1,7 @@
+Bundle-Name: Horse OSGi Service Client by Service Builder
+Bundle-SymbolicName: it.dontesta.labs.liferay.lrbo16.servicebuilder.client.HorseClientCommand
+Bundle-Version: 1.0.0
+Bundle-Category: Horse OSGi Service
+Bundle-Copyright: Antonio Musarra's Blog
+Bundle-Vendor: Antonio Musarra's Blog
+Bundle-DocURL: http://www.dontesta.it/blog

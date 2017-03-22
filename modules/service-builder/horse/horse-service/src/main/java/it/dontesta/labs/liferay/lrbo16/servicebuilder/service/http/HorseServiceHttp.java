@@ -15,14 +15,12 @@
 package it.dontesta.labs.liferay.lrbo16.servicebuilder.service.http;
 
 import aQute.bnd.annotation.ProviderType;
-
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.security.auth.HttpPrincipal;
 import com.liferay.portal.kernel.service.http.TunnelUtil;
 import com.liferay.portal.kernel.util.MethodHandler;
 import com.liferay.portal.kernel.util.MethodKey;
-
 import it.dontesta.labs.liferay.lrbo16.servicebuilder.service.HorseServiceUtil;
 
 /**
@@ -107,9 +105,72 @@ public class HorseServiceHttp {
 		}
 	}
 
+	public static it.dontesta.labs.liferay.lrbo16.servicebuilder.model.Horse addHorse(
+		HttpPrincipal httpPrincipal, java.lang.String name,
+		java.lang.String kind, java.lang.String mantle,
+		java.lang.String gender, int age) {
+		try {
+			MethodKey methodKey = new MethodKey(HorseServiceUtil.class,
+					"addHorse", _addHorseParameterTypes2);
+
+			MethodHandler methodHandler = new MethodHandler(methodKey, name,
+					kind, mantle, gender, age);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception e) {
+				throw new com.liferay.portal.kernel.exception.SystemException(e);
+			}
+
+			return (it.dontesta.labs.liferay.lrbo16.servicebuilder.model.Horse)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException se) {
+			_log.error(se, se);
+
+			throw se;
+		}
+	}
+
+	public static java.util.List<it.dontesta.labs.liferay.lrbo16.servicebuilder.model.Horse> getCurrentHorseByeAge(
+		HttpPrincipal httpPrincipal, int age) {
+		try {
+			MethodKey methodKey = new MethodKey(HorseServiceUtil.class,
+					"getCurrentHorseByeAge",
+					_getCurrentHorseByeAgeParameterTypes3);
+
+			MethodHandler methodHandler = new MethodHandler(methodKey, age);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception e) {
+				throw new com.liferay.portal.kernel.exception.SystemException(e);
+			}
+
+			return (java.util.List<it.dontesta.labs.liferay.lrbo16.servicebuilder.model.Horse>)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException se) {
+			_log.error(se, se);
+
+			throw se;
+		}
+	}
+
 	private static Log _log = LogFactoryUtil.getLog(HorseServiceHttp.class);
 	private static final Class<?>[] _getHorsesParameterTypes0 = new Class[] {  };
 	private static final Class<?>[] _getHorsesByNameParameterTypes1 = new Class[] {
 			java.lang.String.class
+		};
+	private static final Class<?>[] _addHorseParameterTypes2 = new Class[] {
+			java.lang.String.class, java.lang.String.class,
+			java.lang.String.class, java.lang.String.class, int.class
+		};
+	private static final Class<?>[] _getCurrentHorseByeAgeParameterTypes3 = new Class[] {
+			int.class
 		};
 }

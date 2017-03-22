@@ -15,9 +15,7 @@
 package it.dontesta.labs.liferay.lrbo16.servicebuilder.service;
 
 import aQute.bnd.annotation.ProviderType;
-
 import com.liferay.osgi.util.ServiceTrackerFactory;
-
 import org.osgi.util.tracker.ServiceTracker;
 
 /**
@@ -43,12 +41,33 @@ public class HorseServiceUtil {
 	 */
 
 	/**
+	* Add a new Horse
+	*
+	* @param name
+	* @param kind
+	* @param mantle
+	* @param gender
+	* @param age
+	* @return
+	*/
+	public static it.dontesta.labs.liferay.lrbo16.servicebuilder.model.Horse addHorse(
+		java.lang.String name, java.lang.String kind, java.lang.String mantle,
+		java.lang.String gender, int age) {
+		return getService().addHorse(name, kind, mantle, gender, age);
+	}
+
+	/**
 	* Returns the OSGi service identifier.
 	*
 	* @return the OSGi service identifier
 	*/
 	public static java.lang.String getOSGiServiceIdentifier() {
 		return getService().getOSGiServiceIdentifier();
+	}
+
+	public static java.util.List<it.dontesta.labs.liferay.lrbo16.servicebuilder.model.Horse> getCurrentHorseByeAge(
+		int age) {
+		return getService().getCurrentHorseByeAge(age);
 	}
 
 	public static java.util.List<it.dontesta.labs.liferay.lrbo16.servicebuilder.model.Horse> getHorses() {

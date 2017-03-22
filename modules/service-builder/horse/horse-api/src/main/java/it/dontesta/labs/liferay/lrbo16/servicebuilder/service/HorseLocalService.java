@@ -15,14 +15,8 @@
 package it.dontesta.labs.liferay.lrbo16.servicebuilder.service;
 
 import aQute.bnd.annotation.ProviderType;
-
 import com.liferay.exportimport.kernel.lar.PortletDataContext;
-
-import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
-import com.liferay.portal.kernel.dao.orm.DynamicQuery;
-import com.liferay.portal.kernel.dao.orm.ExportActionableDynamicQuery;
-import com.liferay.portal.kernel.dao.orm.IndexableActionableDynamicQuery;
-import com.liferay.portal.kernel.dao.orm.Projection;
+import com.liferay.portal.kernel.dao.orm.*;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.model.PersistedModel;
@@ -34,11 +28,9 @@ import com.liferay.portal.kernel.transaction.Isolation;
 import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.util.OrderByComparator;
-
 import it.dontesta.labs.liferay.lrbo16.servicebuilder.model.Horse;
 
 import java.io.Serializable;
-
 import java.util.List;
 
 /**
@@ -103,6 +95,19 @@ public interface HorseLocalService extends BaseLocalService,
 	*/
 	@Indexable(type = IndexableType.REINDEX)
 	public Horse addHorse(Horse horse);
+
+	/**
+	* Add a new Horse
+	*
+	* @param name
+	* @param kind
+	* @param mantle
+	* @param gender
+	* @param age
+	* @return
+	*/
+	public Horse addHorse(java.lang.String name, java.lang.String kind,
+		java.lang.String mantle, java.lang.String gender, int age);
 
 	/**
 	* Creates a new horse with the primary key. Does not add the horse to the database.

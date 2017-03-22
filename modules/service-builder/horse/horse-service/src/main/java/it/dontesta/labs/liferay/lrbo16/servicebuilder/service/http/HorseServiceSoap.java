@@ -15,10 +15,8 @@
 package it.dontesta.labs.liferay.lrbo16.servicebuilder.service.http;
 
 import aQute.bnd.annotation.ProviderType;
-
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-
 import it.dontesta.labs.liferay.lrbo16.servicebuilder.service.HorseServiceUtil;
 
 import java.rmi.RemoteException;
@@ -85,6 +83,47 @@ public class HorseServiceSoap {
 		try {
 			java.util.List<it.dontesta.labs.liferay.lrbo16.servicebuilder.model.Horse> returnValue =
 				HorseServiceUtil.getHorsesByName(name);
+
+			return it.dontesta.labs.liferay.lrbo16.servicebuilder.model.HorseSoap.toSoapModels(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	/**
+	* Add a new Horse
+	*
+	* @param name
+	* @param kind
+	* @param mantle
+	* @param gender
+	* @param age
+	* @return
+	*/
+	public static it.dontesta.labs.liferay.lrbo16.servicebuilder.model.HorseSoap addHorse(
+		java.lang.String name, java.lang.String kind, java.lang.String mantle,
+		java.lang.String gender, int age) throws RemoteException {
+		try {
+			it.dontesta.labs.liferay.lrbo16.servicebuilder.model.Horse returnValue =
+				HorseServiceUtil.addHorse(name, kind, mantle, gender, age);
+
+			return it.dontesta.labs.liferay.lrbo16.servicebuilder.model.HorseSoap.toSoapModel(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static it.dontesta.labs.liferay.lrbo16.servicebuilder.model.HorseSoap[] getCurrentHorseByeAge(
+		int age) throws RemoteException {
+		try {
+			java.util.List<it.dontesta.labs.liferay.lrbo16.servicebuilder.model.Horse> returnValue =
+				HorseServiceUtil.getCurrentHorseByeAge(age);
 
 			return it.dontesta.labs.liferay.lrbo16.servicebuilder.model.HorseSoap.toSoapModels(returnValue);
 		}

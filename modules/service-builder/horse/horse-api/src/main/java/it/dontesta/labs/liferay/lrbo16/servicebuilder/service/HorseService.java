@@ -15,7 +15,6 @@
 package it.dontesta.labs.liferay.lrbo16.servicebuilder.service;
 
 import aQute.bnd.annotation.ProviderType;
-
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
@@ -25,7 +24,6 @@ import com.liferay.portal.kernel.spring.osgi.OSGiBeanProperties;
 import com.liferay.portal.kernel.transaction.Isolation;
 import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.Transactional;
-
 import it.dontesta.labs.liferay.lrbo16.servicebuilder.model.Horse;
 
 import java.util.List;
@@ -56,11 +54,27 @@ public interface HorseService extends BaseService {
 	 */
 
 	/**
+	* Add a new Horse
+	*
+	* @param name
+	* @param kind
+	* @param mantle
+	* @param gender
+	* @param age
+	* @return
+	*/
+	public Horse addHorse(java.lang.String name, java.lang.String kind,
+		java.lang.String mantle, java.lang.String gender, int age);
+
+	/**
 	* Returns the OSGi service identifier.
 	*
 	* @return the OSGi service identifier
 	*/
 	public java.lang.String getOSGiServiceIdentifier();
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<Horse> getCurrentHorseByeAge(int age);
 
 	@AccessControlled(guestAccessEnabled = true, hostAllowedValidationEnabled = false)
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)

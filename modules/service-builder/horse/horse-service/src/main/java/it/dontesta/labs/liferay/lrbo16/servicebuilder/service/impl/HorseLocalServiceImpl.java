@@ -15,7 +15,7 @@
 package it.dontesta.labs.liferay.lrbo16.servicebuilder.service.impl;
 
 import aQute.bnd.annotation.ProviderType;
-
+import it.dontesta.labs.liferay.lrbo16.servicebuilder.model.Horse;
 import it.dontesta.labs.liferay.lrbo16.servicebuilder.service.base.HorseLocalServiceBaseImpl;
 
 /**
@@ -39,4 +39,29 @@ public class HorseLocalServiceImpl extends HorseLocalServiceBaseImpl {
 	 *
 	 * Never reference this class directly. Always use {@link it.dontesta.labs.liferay.lrbo16.servicebuilder.service.HorseLocalServiceUtil} to access the horse local service.
 	 */
+
+    /**
+     * Add a new Horse
+     *
+     * @param name
+     * @param kind
+     * @param mantle
+     * @param gender
+     * @param age
+     * @return
+     */
+    @Override
+	public Horse addHorse(String name, String kind, String mantle, String gender, int age) {
+	    long horseId = counterLocalService.increment(Horse.class.getName());
+
+	    Horse horse = horsePersistence.create(horseId);
+
+	    horse.setName(name);
+	    horse.setKind(kind);
+	    horse.setMantle(mantle);
+	    horse.setGender(gender);
+	    horse.setAge(5);
+
+	    return horsePersistence.updateImpl(horse);
+    }
 }
