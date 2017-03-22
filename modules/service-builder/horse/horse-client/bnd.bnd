@@ -1,5 +1,5 @@
 Bundle-Name: Horse OSGi Service Client by Service Builder
-Bundle-SymbolicName: it.dontesta.labs.liferay.lrbo16.servicebuilder.client.HorseClientCommand
+Bundle-SymbolicName: horse-command-client
 Bundle-Version: 1.0.0
 Bundle-Category: Horse OSGi Service
 Bundle-Copyright: Antonio Musarra's Blog
