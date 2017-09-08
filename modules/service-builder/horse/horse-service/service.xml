@@ -41,6 +41,10 @@
 			<finder-column name="name" />
 		</finder>
 
+		<finder name="HorseIds" return-type="Collection" db-index="false">
+			<finder-column name="horseId" arrayable-operator="OR" comparator="="/>
+		</finder>
+
 		<finder name="AgeAndCurrentCreateDate" return-type="Collection" where="EXTRACT(DAY FROM createDate) - EXTRACT(DAY FROM CURRENT_TIMESTAMP) = 0 AND EXTRACT(MONTH FROM createDate) - EXTRACT(MONTH FROM CURRENT_TIMESTAMP) = 0 AND EXTRACT(YEAR FROM createDate) - EXTRACT(YEAR FROM CURRENT_TIMESTAMP) = 0">
 			<finder-column name="age" arrayable-operator="OR" comparator="="/>
 		</finder>

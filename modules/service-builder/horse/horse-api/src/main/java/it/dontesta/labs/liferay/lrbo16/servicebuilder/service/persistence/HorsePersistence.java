@@ -15,7 +15,9 @@
 package it.dontesta.labs.liferay.lrbo16.servicebuilder.service.persistence;
 
 import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.service.persistence.BasePersistence;
+
 import it.dontesta.labs.liferay.lrbo16.servicebuilder.exception.NoSuchHorseException;
 import it.dontesta.labs.liferay.lrbo16.servicebuilder.model.Horse;
 
@@ -494,6 +496,194 @@ public interface HorsePersistence extends BasePersistence<Horse> {
 	* @return the number of matching horses
 	*/
 	public int countByName(java.lang.String name);
+
+	/**
+	* Returns all the horses where horseId = &#63;.
+	*
+	* @param horseId the horse ID
+	* @return the matching horses
+	*/
+	public java.util.List<Horse> findByHorseIds(long horseId);
+
+	/**
+	* Returns a range of all the horses where horseId = &#63;.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link HorseModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	* </p>
+	*
+	* @param horseId the horse ID
+	* @param start the lower bound of the range of horses
+	* @param end the upper bound of the range of horses (not inclusive)
+	* @return the range of matching horses
+	*/
+	public java.util.List<Horse> findByHorseIds(long horseId, int start, int end);
+
+	/**
+	* Returns an ordered range of all the horses where horseId = &#63;.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link HorseModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	* </p>
+	*
+	* @param horseId the horse ID
+	* @param start the lower bound of the range of horses
+	* @param end the upper bound of the range of horses (not inclusive)
+	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	* @return the ordered range of matching horses
+	*/
+	public java.util.List<Horse> findByHorseIds(long horseId, int start,
+		int end,
+		com.liferay.portal.kernel.util.OrderByComparator<Horse> orderByComparator);
+
+	/**
+	* Returns an ordered range of all the horses where horseId = &#63;.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link HorseModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	* </p>
+	*
+	* @param horseId the horse ID
+	* @param start the lower bound of the range of horses
+	* @param end the upper bound of the range of horses (not inclusive)
+	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	* @param retrieveFromCache whether to retrieve from the finder cache
+	* @return the ordered range of matching horses
+	*/
+	public java.util.List<Horse> findByHorseIds(long horseId, int start,
+		int end,
+		com.liferay.portal.kernel.util.OrderByComparator<Horse> orderByComparator,
+		boolean retrieveFromCache);
+
+	/**
+	* Returns the first horse in the ordered set where horseId = &#63;.
+	*
+	* @param horseId the horse ID
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the first matching horse
+	* @throws NoSuchHorseException if a matching horse could not be found
+	*/
+	public Horse findByHorseIds_First(long horseId,
+		com.liferay.portal.kernel.util.OrderByComparator<Horse> orderByComparator)
+		throws NoSuchHorseException;
+
+	/**
+	* Returns the first horse in the ordered set where horseId = &#63;.
+	*
+	* @param horseId the horse ID
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the first matching horse, or <code>null</code> if a matching horse could not be found
+	*/
+	public Horse fetchByHorseIds_First(long horseId,
+		com.liferay.portal.kernel.util.OrderByComparator<Horse> orderByComparator);
+
+	/**
+	* Returns the last horse in the ordered set where horseId = &#63;.
+	*
+	* @param horseId the horse ID
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the last matching horse
+	* @throws NoSuchHorseException if a matching horse could not be found
+	*/
+	public Horse findByHorseIds_Last(long horseId,
+		com.liferay.portal.kernel.util.OrderByComparator<Horse> orderByComparator)
+		throws NoSuchHorseException;
+
+	/**
+	* Returns the last horse in the ordered set where horseId = &#63;.
+	*
+	* @param horseId the horse ID
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the last matching horse, or <code>null</code> if a matching horse could not be found
+	*/
+	public Horse fetchByHorseIds_Last(long horseId,
+		com.liferay.portal.kernel.util.OrderByComparator<Horse> orderByComparator);
+
+	/**
+	* Returns all the horses where horseId = any &#63;.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link HorseModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	* </p>
+	*
+	* @param horseIds the horse IDs
+	* @return the matching horses
+	*/
+	public java.util.List<Horse> findByHorseIds(long[] horseIds);
+
+	/**
+	* Returns a range of all the horses where horseId = any &#63;.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link HorseModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	* </p>
+	*
+	* @param horseIds the horse IDs
+	* @param start the lower bound of the range of horses
+	* @param end the upper bound of the range of horses (not inclusive)
+	* @return the range of matching horses
+	*/
+	public java.util.List<Horse> findByHorseIds(long[] horseIds, int start,
+		int end);
+
+	/**
+	* Returns an ordered range of all the horses where horseId = any &#63;.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link HorseModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	* </p>
+	*
+	* @param horseIds the horse IDs
+	* @param start the lower bound of the range of horses
+	* @param end the upper bound of the range of horses (not inclusive)
+	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	* @return the ordered range of matching horses
+	*/
+	public java.util.List<Horse> findByHorseIds(long[] horseIds, int start,
+		int end,
+		com.liferay.portal.kernel.util.OrderByComparator<Horse> orderByComparator);
+
+	/**
+	* Returns an ordered range of all the horses where horseId = &#63;, optionally using the finder cache.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link HorseModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	* </p>
+	*
+	* @param horseId the horse ID
+	* @param start the lower bound of the range of horses
+	* @param end the upper bound of the range of horses (not inclusive)
+	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	* @param retrieveFromCache whether to retrieve from the finder cache
+	* @return the ordered range of matching horses
+	*/
+	public java.util.List<Horse> findByHorseIds(long[] horseIds, int start,
+		int end,
+		com.liferay.portal.kernel.util.OrderByComparator<Horse> orderByComparator,
+		boolean retrieveFromCache);
+
+	/**
+	* Removes all the horses where horseId = &#63; from the database.
+	*
+	* @param horseId the horse ID
+	*/
+	public void removeByHorseIds(long horseId);
+
+	/**
+	* Returns the number of horses where horseId = &#63;.
+	*
+	* @param horseId the horse ID
+	* @return the number of matching horses
+	*/
+	public int countByHorseIds(long horseId);
+
+	/**
+	* Returns the number of horses where horseId = any &#63;.
+	*
+	* @param horseIds the horse IDs
+	* @return the number of matching horses
+	*/
+	public int countByHorseIds(long[] horseIds);
 
 	/**
 	* Returns all the horses where age = &#63;.

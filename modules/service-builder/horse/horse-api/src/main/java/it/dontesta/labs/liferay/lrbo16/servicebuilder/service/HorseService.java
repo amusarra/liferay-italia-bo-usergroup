@@ -15,6 +15,7 @@
 package it.dontesta.labs.liferay.lrbo16.servicebuilder.service;
 
 import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
@@ -24,6 +25,7 @@ import com.liferay.portal.kernel.spring.osgi.OSGiBeanProperties;
 import com.liferay.portal.kernel.transaction.Isolation;
 import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.Transactional;
+
 import it.dontesta.labs.liferay.lrbo16.servicebuilder.model.Horse;
 
 import java.util.List;

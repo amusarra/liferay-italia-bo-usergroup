@@ -15,9 +15,12 @@
 package it.dontesta.labs.liferay.lrbo16.servicebuilder.model.impl;
 
 import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.expando.kernel.model.ExpandoBridge;
 import com.liferay.expando.kernel.util.ExpandoBridgeFactoryUtil;
+
 import com.liferay.exportimport.kernel.lar.StagedModelType;
+
 import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSON;
@@ -26,14 +29,25 @@ import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.model.impl.BaseModelImpl;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
-import com.liferay.portal.kernel.util.*;
+import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.ProxyUtil;
+import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringPool;
+
 import it.dontesta.labs.liferay.lrbo16.servicebuilder.model.Horse;
 import it.dontesta.labs.liferay.lrbo16.servicebuilder.model.HorseModel;
 import it.dontesta.labs.liferay.lrbo16.servicebuilder.model.HorseSoap;
 
 import java.io.Serializable;
+
 import java.sql.Types;
-import java.util.*;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * The base model implementation for the Horse service. Represents a row in the &quot;LRBO_HORSE_Horse&quot; database table, with each column mapped to a property of this class.
@@ -109,8 +123,9 @@ public class HorseModelImpl extends BaseModelImpl<Horse> implements HorseModel {
 	public static final long AGE_COLUMN_BITMASK = 1L;
 	public static final long COMPANYID_COLUMN_BITMASK = 2L;
 	public static final long GROUPID_COLUMN_BITMASK = 4L;
-	public static final long NAME_COLUMN_BITMASK = 8L;
-	public static final long UUID_COLUMN_BITMASK = 16L;
+	public static final long HORSEID_COLUMN_BITMASK = 8L;
+	public static final long NAME_COLUMN_BITMASK = 16L;
+	public static final long UUID_COLUMN_BITMASK = 32L;
 
 	/**
 	 * Converts the soap model instance into a normal model instance.
@@ -335,7 +350,19 @@ public class HorseModelImpl extends BaseModelImpl<Horse> implements HorseModel {
 
 	@Override
 	public void setHorseId(long horseId) {
+		_columnBitmask |= HORSEID_COLUMN_BITMASK;
+
+		if (!_setOriginalHorseId) {
+			_setOriginalHorseId = true;
+
+			_originalHorseId = _horseId;
+		}
+
 		_horseId = horseId;
+	}
+
+	public long getOriginalHorseId() {
+		return _originalHorseId;
 	}
 
 	@JSON
@@ -664,6 +691,10 @@ public class HorseModelImpl extends BaseModelImpl<Horse> implements HorseModel {
 
 		horseModelImpl._originalUuid = horseModelImpl._uuid;
 
+		horseModelImpl._originalHorseId = horseModelImpl._horseId;
+
+		horseModelImpl._setOriginalHorseId = false;
+
 		horseModelImpl._originalGroupId = horseModelImpl._groupId;
 
 		horseModelImpl._setOriginalGroupId = false;
@@ -874,6 +905,8 @@ public class HorseModelImpl extends BaseModelImpl<Horse> implements HorseModel {
 	private String _uuid;
 	private String _originalUuid;
 	private long _horseId;
+	private long _originalHorseId;
+	private boolean _setOriginalHorseId;
 	private long _groupId;
 	private long _originalGroupId;
 	private boolean _setOriginalGroupId;

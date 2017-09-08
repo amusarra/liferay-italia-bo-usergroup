@@ -15,7 +15,14 @@
 package it.dontesta.labs.liferay.lrbo16.servicebuilder.service.persistence.impl;
 
 import aQute.bnd.annotation.ProviderType;
-import com.liferay.portal.kernel.dao.orm.*;
+
+import com.liferay.portal.kernel.dao.orm.EntityCache;
+import com.liferay.portal.kernel.dao.orm.FinderCache;
+import com.liferay.portal.kernel.dao.orm.FinderPath;
+import com.liferay.portal.kernel.dao.orm.Query;
+import com.liferay.portal.kernel.dao.orm.QueryPos;
+import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
@@ -23,9 +30,16 @@ import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.service.persistence.CompanyProvider;
 import com.liferay.portal.kernel.service.persistence.CompanyProviderWrapper;
 import com.liferay.portal.kernel.service.persistence.impl.BasePersistenceImpl;
-import com.liferay.portal.kernel.util.*;
+import com.liferay.portal.kernel.util.ArrayUtil;
+import com.liferay.portal.kernel.util.OrderByComparator;
+import com.liferay.portal.kernel.util.SetUtil;
+import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.uuid.PortalUUIDUtil;
 import com.liferay.portal.spring.extender.service.ServiceReference;
+
 import it.dontesta.labs.liferay.lrbo16.servicebuilder.exception.NoSuchHorseException;
 import it.dontesta.labs.liferay.lrbo16.servicebuilder.model.Horse;
 import it.dontesta.labs.liferay.lrbo16.servicebuilder.model.impl.HorseImpl;
@@ -33,7 +47,17 @@ import it.dontesta.labs.liferay.lrbo16.servicebuilder.model.impl.HorseModelImpl;
 import it.dontesta.labs.liferay.lrbo16.servicebuilder.service.persistence.HorsePersistence;
 
 import java.io.Serializable;
-import java.util.*;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 /**
  * The persistence implementation for the horse service.
@@ -1981,6 +2005,620 @@ public class HorsePersistenceImpl extends BasePersistenceImpl<Horse>
 	private static final String _FINDER_COLUMN_NAME_NAME_1 = "horse.name IS NULL";
 	private static final String _FINDER_COLUMN_NAME_NAME_2 = "horse.name = ?";
 	private static final String _FINDER_COLUMN_NAME_NAME_3 = "(horse.name IS NULL OR horse.name = '')";
+	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_HORSEIDS = new FinderPath(HorseModelImpl.ENTITY_CACHE_ENABLED,
+			HorseModelImpl.FINDER_CACHE_ENABLED, HorseImpl.class,
+			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByHorseIds",
+			new String[] {
+				Long.class.getName(),
+				
+			Integer.class.getName(), Integer.class.getName(),
+				OrderByComparator.class.getName()
+			});
+	public static final FinderPath FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_HORSEIDS =
+		new FinderPath(HorseModelImpl.ENTITY_CACHE_ENABLED,
+			HorseModelImpl.FINDER_CACHE_ENABLED, HorseImpl.class,
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByHorseIds",
+			new String[] { Long.class.getName() },
+			HorseModelImpl.HORSEID_COLUMN_BITMASK |
+			HorseModelImpl.NAME_COLUMN_BITMASK);
+	public static final FinderPath FINDER_PATH_COUNT_BY_HORSEIDS = new FinderPath(HorseModelImpl.ENTITY_CACHE_ENABLED,
+			HorseModelImpl.FINDER_CACHE_ENABLED, Long.class,
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByHorseIds",
+			new String[] { Long.class.getName() });
+	public static final FinderPath FINDER_PATH_WITH_PAGINATION_COUNT_BY_HORSEIDS =
+		new FinderPath(HorseModelImpl.ENTITY_CACHE_ENABLED,
+			HorseModelImpl.FINDER_CACHE_ENABLED, Long.class,
+			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "countByHorseIds",
+			new String[] { Long.class.getName() });
+
+	/**
+	 * Returns all the horses where horseId = &#63;.
+	 *
+	 * @param horseId the horse ID
+	 * @return the matching horses
+	 */
+	@Override
+	public List<Horse> findByHorseIds(long horseId) {
+		return findByHorseIds(horseId, QueryUtil.ALL_POS, QueryUtil.ALL_POS,
+			null);
+	}
+
+	/**
+	 * Returns a range of all the horses where horseId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link HorseModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param horseId the horse ID
+	 * @param start the lower bound of the range of horses
+	 * @param end the upper bound of the range of horses (not inclusive)
+	 * @return the range of matching horses
+	 */
+	@Override
+	public List<Horse> findByHorseIds(long horseId, int start, int end) {
+		return findByHorseIds(horseId, start, end, null);
+	}
+
+	/**
+	 * Returns an ordered range of all the horses where horseId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link HorseModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param horseId the horse ID
+	 * @param start the lower bound of the range of horses
+	 * @param end the upper bound of the range of horses (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching horses
+	 */
+	@Override
+	public List<Horse> findByHorseIds(long horseId, int start, int end,
+		OrderByComparator<Horse> orderByComparator) {
+		return findByHorseIds(horseId, start, end, orderByComparator, true);
+	}
+
+	/**
+	 * Returns an ordered range of all the horses where horseId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link HorseModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param horseId the horse ID
+	 * @param start the lower bound of the range of horses
+	 * @param end the upper bound of the range of horses (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @param retrieveFromCache whether to retrieve from the finder cache
+	 * @return the ordered range of matching horses
+	 */
+	@Override
+	public List<Horse> findByHorseIds(long horseId, int start, int end,
+		OrderByComparator<Horse> orderByComparator, boolean retrieveFromCache) {
+		boolean pagination = true;
+		FinderPath finderPath = null;
+		Object[] finderArgs = null;
+
+		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
+				(orderByComparator == null)) {
+			pagination = false;
+			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_HORSEIDS;
+			finderArgs = new Object[] { horseId };
+		}
+		else {
+			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_HORSEIDS;
+			finderArgs = new Object[] { horseId, start, end, orderByComparator };
+		}
+
+		List<Horse> list = null;
+
+		if (retrieveFromCache) {
+			list = (List<Horse>)finderCache.getResult(finderPath, finderArgs,
+					this);
+
+			if ((list != null) && !list.isEmpty()) {
+				for (Horse horse : list) {
+					if ((horseId != horse.getHorseId())) {
+						list = null;
+
+						break;
+					}
+				}
+			}
+		}
+
+		if (list == null) {
+			StringBundler query = null;
+
+			if (orderByComparator != null) {
+				query = new StringBundler(3 +
+						(orderByComparator.getOrderByFields().length * 2));
+			}
+			else {
+				query = new StringBundler(3);
+			}
+
+			query.append(_SQL_SELECT_HORSE_WHERE);
+
+			query.append(_FINDER_COLUMN_HORSEIDS_HORSEID_2);
+
+			if (orderByComparator != null) {
+				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
+					orderByComparator);
+			}
+			else
+			 if (pagination) {
+				query.append(HorseModelImpl.ORDER_BY_JPQL);
+			}
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				qPos.add(horseId);
+
+				if (!pagination) {
+					list = (List<Horse>)QueryUtil.list(q, getDialect(), start,
+							end, false);
+
+					Collections.sort(list);
+
+					list = Collections.unmodifiableList(list);
+				}
+				else {
+					list = (List<Horse>)QueryUtil.list(q, getDialect(), start,
+							end);
+				}
+
+				cacheResult(list);
+
+				finderCache.putResult(finderPath, finderArgs, list);
+			}
+			catch (Exception e) {
+				finderCache.removeResult(finderPath, finderArgs);
+
+				throw processException(e);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return list;
+	}
+
+	/**
+	 * Returns the first horse in the ordered set where horseId = &#63;.
+	 *
+	 * @param horseId the horse ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching horse
+	 * @throws NoSuchHorseException if a matching horse could not be found
+	 */
+	@Override
+	public Horse findByHorseIds_First(long horseId,
+		OrderByComparator<Horse> orderByComparator) throws NoSuchHorseException {
+		Horse horse = fetchByHorseIds_First(horseId, orderByComparator);
+
+		if (horse != null) {
+			return horse;
+		}
+
+		StringBundler msg = new StringBundler(4);
+
+		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+		msg.append("horseId=");
+		msg.append(horseId);
+
+		msg.append(StringPool.CLOSE_CURLY_BRACE);
+
+		throw new NoSuchHorseException(msg.toString());
+	}
+
+	/**
+	 * Returns the first horse in the ordered set where horseId = &#63;.
+	 *
+	 * @param horseId the horse ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching horse, or <code>null</code> if a matching horse could not be found
+	 */
+	@Override
+	public Horse fetchByHorseIds_First(long horseId,
+		OrderByComparator<Horse> orderByComparator) {
+		List<Horse> list = findByHorseIds(horseId, 0, 1, orderByComparator);
+
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the last horse in the ordered set where horseId = &#63;.
+	 *
+	 * @param horseId the horse ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching horse
+	 * @throws NoSuchHorseException if a matching horse could not be found
+	 */
+	@Override
+	public Horse findByHorseIds_Last(long horseId,
+		OrderByComparator<Horse> orderByComparator) throws NoSuchHorseException {
+		Horse horse = fetchByHorseIds_Last(horseId, orderByComparator);
+
+		if (horse != null) {
+			return horse;
+		}
+
+		StringBundler msg = new StringBundler(4);
+
+		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+		msg.append("horseId=");
+		msg.append(horseId);
+
+		msg.append(StringPool.CLOSE_CURLY_BRACE);
+
+		throw new NoSuchHorseException(msg.toString());
+	}
+
+	/**
+	 * Returns the last horse in the ordered set where horseId = &#63;.
+	 *
+	 * @param horseId the horse ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching horse, or <code>null</code> if a matching horse could not be found
+	 */
+	@Override
+	public Horse fetchByHorseIds_Last(long horseId,
+		OrderByComparator<Horse> orderByComparator) {
+		int count = countByHorseIds(horseId);
+
+		if (count == 0) {
+			return null;
+		}
+
+		List<Horse> list = findByHorseIds(horseId, count - 1, count,
+				orderByComparator);
+
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns all the horses where horseId = any &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link HorseModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param horseIds the horse IDs
+	 * @return the matching horses
+	 */
+	@Override
+	public List<Horse> findByHorseIds(long[] horseIds) {
+		return findByHorseIds(horseIds, QueryUtil.ALL_POS, QueryUtil.ALL_POS,
+			null);
+	}
+
+	/**
+	 * Returns a range of all the horses where horseId = any &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link HorseModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param horseIds the horse IDs
+	 * @param start the lower bound of the range of horses
+	 * @param end the upper bound of the range of horses (not inclusive)
+	 * @return the range of matching horses
+	 */
+	@Override
+	public List<Horse> findByHorseIds(long[] horseIds, int start, int end) {
+		return findByHorseIds(horseIds, start, end, null);
+	}
+
+	/**
+	 * Returns an ordered range of all the horses where horseId = any &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link HorseModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param horseIds the horse IDs
+	 * @param start the lower bound of the range of horses
+	 * @param end the upper bound of the range of horses (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching horses
+	 */
+	@Override
+	public List<Horse> findByHorseIds(long[] horseIds, int start, int end,
+		OrderByComparator<Horse> orderByComparator) {
+		return findByHorseIds(horseIds, start, end, orderByComparator, true);
+	}
+
+	/**
+	 * Returns an ordered range of all the horses where horseId = &#63;, optionally using the finder cache.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link HorseModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param horseId the horse ID
+	 * @param start the lower bound of the range of horses
+	 * @param end the upper bound of the range of horses (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @param retrieveFromCache whether to retrieve from the finder cache
+	 * @return the ordered range of matching horses
+	 */
+	@Override
+	public List<Horse> findByHorseIds(long[] horseIds, int start, int end,
+		OrderByComparator<Horse> orderByComparator, boolean retrieveFromCache) {
+		if (horseIds == null) {
+			horseIds = new long[0];
+		}
+		else if (horseIds.length > 1) {
+			horseIds = ArrayUtil.unique(horseIds);
+
+			Arrays.sort(horseIds);
+		}
+
+		if (horseIds.length == 1) {
+			return findByHorseIds(horseIds[0], start, end, orderByComparator);
+		}
+
+		boolean pagination = true;
+		Object[] finderArgs = null;
+
+		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
+				(orderByComparator == null)) {
+			pagination = false;
+			finderArgs = new Object[] { StringUtil.merge(horseIds) };
+		}
+		else {
+			finderArgs = new Object[] {
+					StringUtil.merge(horseIds),
+					
+					start, end, orderByComparator
+				};
+		}
+
+		List<Horse> list = null;
+
+		if (retrieveFromCache) {
+			list = (List<Horse>)finderCache.getResult(FINDER_PATH_WITH_PAGINATION_FIND_BY_HORSEIDS,
+					finderArgs, this);
+
+			if ((list != null) && !list.isEmpty()) {
+				for (Horse horse : list) {
+					if (!ArrayUtil.contains(horseIds, horse.getHorseId())) {
+						list = null;
+
+						break;
+					}
+				}
+			}
+		}
+
+		if (list == null) {
+			StringBundler query = new StringBundler();
+
+			query.append(_SQL_SELECT_HORSE_WHERE);
+
+			if (horseIds.length > 0) {
+				query.append(StringPool.OPEN_PARENTHESIS);
+
+				query.append(_FINDER_COLUMN_HORSEIDS_HORSEID_7);
+
+				query.append(StringUtil.merge(horseIds));
+
+				query.append(StringPool.CLOSE_PARENTHESIS);
+
+				query.append(StringPool.CLOSE_PARENTHESIS);
+			}
+
+			query.setStringAt(removeConjunction(query.stringAt(query.index() -
+						1)), query.index() - 1);
+
+			if (orderByComparator != null) {
+				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
+					orderByComparator);
+			}
+			else
+			 if (pagination) {
+				query.append(HorseModelImpl.ORDER_BY_JPQL);
+			}
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				if (!pagination) {
+					list = (List<Horse>)QueryUtil.list(q, getDialect(), start,
+							end, false);
+
+					Collections.sort(list);
+
+					list = Collections.unmodifiableList(list);
+				}
+				else {
+					list = (List<Horse>)QueryUtil.list(q, getDialect(), start,
+							end);
+				}
+
+				cacheResult(list);
+
+				finderCache.putResult(FINDER_PATH_WITH_PAGINATION_FIND_BY_HORSEIDS,
+					finderArgs, list);
+			}
+			catch (Exception e) {
+				finderCache.removeResult(FINDER_PATH_WITH_PAGINATION_FIND_BY_HORSEIDS,
+					finderArgs);
+
+				throw processException(e);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return list;
+	}
+
+	/**
+	 * Removes all the horses where horseId = &#63; from the database.
+	 *
+	 * @param horseId the horse ID
+	 */
+	@Override
+	public void removeByHorseIds(long horseId) {
+		for (Horse horse : findByHorseIds(horseId, QueryUtil.ALL_POS,
+				QueryUtil.ALL_POS, null)) {
+			remove(horse);
+		}
+	}
+
+	/**
+	 * Returns the number of horses where horseId = &#63;.
+	 *
+	 * @param horseId the horse ID
+	 * @return the number of matching horses
+	 */
+	@Override
+	public int countByHorseIds(long horseId) {
+		FinderPath finderPath = FINDER_PATH_COUNT_BY_HORSEIDS;
+
+		Object[] finderArgs = new Object[] { horseId };
+
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
+
+		if (count == null) {
+			StringBundler query = new StringBundler(2);
+
+			query.append(_SQL_COUNT_HORSE_WHERE);
+
+			query.append(_FINDER_COLUMN_HORSEIDS_HORSEID_2);
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				qPos.add(horseId);
+
+				count = (Long)q.uniqueResult();
+
+				finderCache.putResult(finderPath, finderArgs, count);
+			}
+			catch (Exception e) {
+				finderCache.removeResult(finderPath, finderArgs);
+
+				throw processException(e);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return count.intValue();
+	}
+
+	/**
+	 * Returns the number of horses where horseId = any &#63;.
+	 *
+	 * @param horseIds the horse IDs
+	 * @return the number of matching horses
+	 */
+	@Override
+	public int countByHorseIds(long[] horseIds) {
+		if (horseIds == null) {
+			horseIds = new long[0];
+		}
+		else if (horseIds.length > 1) {
+			horseIds = ArrayUtil.unique(horseIds);
+
+			Arrays.sort(horseIds);
+		}
+
+		Object[] finderArgs = new Object[] { StringUtil.merge(horseIds) };
+
+		Long count = (Long)finderCache.getResult(FINDER_PATH_WITH_PAGINATION_COUNT_BY_HORSEIDS,
+				finderArgs, this);
+
+		if (count == null) {
+			StringBundler query = new StringBundler();
+
+			query.append(_SQL_COUNT_HORSE_WHERE);
+
+			if (horseIds.length > 0) {
+				query.append(StringPool.OPEN_PARENTHESIS);
+
+				query.append(_FINDER_COLUMN_HORSEIDS_HORSEID_7);
+
+				query.append(StringUtil.merge(horseIds));
+
+				query.append(StringPool.CLOSE_PARENTHESIS);
+
+				query.append(StringPool.CLOSE_PARENTHESIS);
+			}
+
+			query.setStringAt(removeConjunction(query.stringAt(query.index() -
+						1)), query.index() - 1);
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				count = (Long)q.uniqueResult();
+
+				finderCache.putResult(FINDER_PATH_WITH_PAGINATION_COUNT_BY_HORSEIDS,
+					finderArgs, count);
+			}
+			catch (Exception e) {
+				finderCache.removeResult(FINDER_PATH_WITH_PAGINATION_COUNT_BY_HORSEIDS,
+					finderArgs);
+
+				throw processException(e);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return count.intValue();
+	}
+
+	private static final String _FINDER_COLUMN_HORSEIDS_HORSEID_2 = "horse.horseId = ?";
+	private static final String _FINDER_COLUMN_HORSEIDS_HORSEID_7 = "horse.horseId IN (";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_AGEANDCURRENTCREATEDATE =
 		new FinderPath(HorseModelImpl.ENTITY_CACHE_ENABLED,
 			HorseModelImpl.FINDER_CACHE_ENABLED, HorseImpl.class,
@@ -3089,6 +3727,21 @@ public class HorsePersistenceImpl extends BasePersistenceImpl<Horse>
 
 				finderCache.removeResult(FINDER_PATH_COUNT_BY_NAME, args);
 				finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_NAME,
+					args);
+			}
+
+			if ((horseModelImpl.getColumnBitmask() &
+					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_HORSEIDS.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] { horseModelImpl.getOriginalHorseId() };
+
+				finderCache.removeResult(FINDER_PATH_COUNT_BY_HORSEIDS, args);
+				finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_HORSEIDS,
+					args);
+
+				args = new Object[] { horseModelImpl.getHorseId() };
+
+				finderCache.removeResult(FINDER_PATH_COUNT_BY_HORSEIDS, args);
+				finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_HORSEIDS,
 					args);
 			}
 

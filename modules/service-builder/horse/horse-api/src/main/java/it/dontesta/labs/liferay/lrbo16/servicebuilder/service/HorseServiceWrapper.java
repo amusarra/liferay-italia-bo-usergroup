@@ -15,6 +15,7 @@
 package it.dontesta.labs.liferay.lrbo16.servicebuilder.service;
 
 import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.service.ServiceWrapper;
 
 /**
